@@ -1,58 +1,139 @@
 ---
 import { getCollection } from 'astro:content';
+import sharp from 'sharp';
+import path from 'path';
 
 const galleryItems = await getCollection('gallery');
-const sortedGallery = galleryItems.sort((a, b) => a.data.order - b.data.order);
+
+// Read intrinsic width, height, and aspect ratio for each image at build time
+const enrichedGallery = await Promise.all(
+  galleryItems.map(async (item) => {
+    const relativePath = item.data.image.replace(/^\//, '');
+    const absolutePath = path.join(process.cwd(), 'public', relativePath);
+    let width = 1200;
+    let height = 1200;
+    let aspectRatio = '1 / 1';
+
+    try {
+      const meta = await sharp(absolutePath).metadata();
+      if (meta.width && meta.height) {
+        width = meta.width;
+        height = meta.height;
+        aspectRatio = `${meta.width} / ${meta.height}`;
+      }
+    } catch (err) {
+      console.warn(`Could not read metadata for gallery image ${item.data.image}:`, err);
+    }
+
+    return {
+      ...item,
+      width,
+      height,
+      aspectRatio,
+    };
+  })
+);
+
+const sortedGallery = enrichedGallery.sort((a, b) => a.data.order - b.data.order);
+
+// Extract distinct categories
+const rawCategories = sortedGallery.map(item => item.data.category);
+const categories = ['All', ...Array.from(new Set(rawCategories))];
 ---
 
 <section id="gallery" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
   <div class="max-w-7xl mx-auto">
     <!-- Section Header -->
-    <div class="mb-14">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
-        <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
-        <span>Gallery /&gt;</span>
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
+          <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
+          <span>Gallery /&gt;</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+          Creative Pursuits &amp; Moments
+        </h2>
+        <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
+          Sketches, caricatures, digital art experiments, and snapshots from Karlsruhe and Mumbai in their authentic aspect ratios.
+        </p>
       </div>
-      <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-        Creative Pursuits & Moments
-      </h2>
-      <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
-        Sketches, caricatures, digital art experiments, and snapshots from Karlsruhe and Mumbai.
-      </p>
+
+      <div class="text-xs font-mono text-slate-500">
+        <span class="text-ember-400 font-bold">{sortedGallery.length}</span> artworks &amp; moments
+      </div>
     </div>
 
-    <!-- Gallery Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+    <!-- Category Filter Bar -->
+    <div class="mb-10 overflow-x-auto pb-2 scrollbar-none">
+      <div class="flex items-center gap-2 min-w-max" id="gallery-filters">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            data-gallery-filter={cat}
+            class={`gallery-filter-btn px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 border ${
+              idx === 0 
+                ? 'bg-ember-500 text-white border-ember-500 shadow-glow-ember' 
+                : 'bg-white/[0.03] text-slate-400 border-white/[0.08] hover:text-white hover:bg-white/[0.06]'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Masonry Gallery Grid (Natural Aspect Ratios, Zero Cropping) -->
+    <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 [column-fill:_balance]" id="gallery-grid">
       {sortedGallery.map(item => (
         <div 
-          class="gallery-card group relative aspect-square rounded-2xl overflow-hidden bg-obsidian-900 border border-white/[0.06] hover:border-ember-500/40 cursor-pointer transition-all duration-300 shadow-md"
+          class="gallery-card break-inside-avoid mb-6 group relative rounded-2xl overflow-hidden bg-obsidian-900 border border-white/[0.08] hover:border-ember-500/40 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-glow-card"
           data-image={item.data.image}
           data-title={item.data.title}
           data-category={item.data.category}
         >
+          <!-- Figure image rendered with its natural intrinsic aspect ratio -->
           <img 
             src={item.data.image} 
             alt={item.data.title} 
+            width={item.width}
+            height={item.height}
             loading="lazy"
-            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+            class="w-full h-auto block object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+            style={`aspect-ratio: ${item.aspectRatio};`}
           />
 
-          <!-- Overlay gradient -->
-          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-            <span class="text-[11px] font-mono text-ember-400 uppercase tracking-wider">{item.data.category}</span>
-            <h4 class="text-sm font-bold font-display text-white">{item.data.title}</h4>
+          <!-- Overlay gradient with title and category pill on hover -->
+          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 pointer-events-none">
+            <span class="text-[11px] font-mono text-ember-400 uppercase tracking-wider font-semibold mb-1">
+              {item.data.category}
+            </span>
+            <h4 class="text-sm font-bold font-display text-white leading-snug">
+              {item.data.title}
+            </h4>
+          </div>
+
+          <!-- Subtle Expand Action Icon -->
+          <div class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-obsidian-950/80 backdrop-blur-md border border-white/[0.1] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-md">
+            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+            </svg>
           </div>
         </div>
       ))}
     </div>
+
+    <!-- Empty State Fallback -->
+    <div id="no-gallery-items" class="hidden text-center py-16 text-slate-500 font-mono text-sm">
+      No items found under this category.
+    </div>
   </div>
 
   <!-- Lightbox Modal -->
-  <div id="gallery-lightbox" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+  <div id="gallery-lightbox" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden items-center justify-center p-4 sm:p-6">
     <button 
       id="lightbox-close"
       type="button"
-      class="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+      class="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
       aria-label="Close Lightbox"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,25 +141,64 @@ const sortedGallery = galleryItems.sort((a, b) => a.data.order - b.data.order);
       </svg>
     </button>
 
-    <div class="max-w-4xl max-h-[85vh] flex flex-col items-center">
-      <img id="lightbox-img" src="" alt="" class="max-h-[75vh] max-w-full rounded-xl object-contain shadow-2xl border border-white/10" />
+    <div class="max-w-5xl max-h-[90vh] flex flex-col items-center">
+      <img 
+        id="lightbox-img" 
+        src="" 
+        alt="" 
+        class="max-h-[78vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10" 
+      />
       <div class="mt-4 text-center">
         <h3 id="lightbox-title" class="text-lg font-bold font-display text-white"></h3>
-        <p id="lightbox-category" class="text-xs font-mono text-ember-400"></p>
+        <p id="lightbox-category" class="text-xs font-mono text-ember-400 mt-1 uppercase tracking-wider"></p>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-  function setupGalleryLightbox() {
+  function setupGallery() {
     const cards = document.querySelectorAll<HTMLElement>('.gallery-card');
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>('.gallery-filter-btn');
+    const noItemsMsg = document.getElementById('no-gallery-items');
     const lightbox = document.getElementById('gallery-lightbox');
-    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
     const lightboxTitle = document.getElementById('lightbox-title');
     const lightboxCat = document.getElementById('lightbox-category');
     const closeBtn = document.getElementById('lightbox-close');
 
+    // 1. Category Filtering
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-gallery-filter');
+        if (!filter) return;
+
+        // Update button active styling
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
+          b.classList.add('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.08]');
+        });
+        btn.classList.remove('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.08]');
+        btn.classList.add('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
+
+        let matchCount = 0;
+        cards.forEach(card => {
+          const cat = card.getAttribute('data-category');
+          if (filter === 'All' || cat === filter) {
+            card.style.display = 'block';
+            matchCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (noItemsMsg) {
+          noItemsMsg.classList.toggle('hidden', matchCount > 0);
+        }
+      });
+    });
+
+    // 2. Lightbox Interaction
     if (!lightbox || !lightboxImg) return;
 
     cards.forEach(card => {
@@ -117,6 +237,6 @@ const sortedGallery = galleryItems.sort((a, b) => a.data.order - b.data.order);
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupGalleryLightbox);
-  document.addEventListener('astro:page-load', setupGalleryLightbox);
+  document.addEventListener('DOMContentLoaded', setupGallery);
+  document.addEventListener('astro:page-load', setupGallery);
 </script>
