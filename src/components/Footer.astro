@@ -2,31 +2,167 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-white/[0.06] bg-obsidian-950 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-    <!-- Brand -->
-    <div class="flex items-center gap-2">
-      <span class="text-ember-500 font-mono font-bold">&lt;</span>
-      <span class="font-mono font-bold text-white tracking-tight">YouFound<span class="text-ember-500">JK</span></span>
-      <span class="text-ember-500 font-mono font-bold">/&gt;</span>
-      <span class="text-xs font-mono text-slate-500 ml-3">Jovi Koikkara</span>
+<footer class="mt-auto border-t border-white/[0.08] bg-obsidian-950 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  <!-- Subtle ambient glow in footer -->
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-ember-500/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <!-- Main Footer Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/[0.06]">
+      
+      <!-- Col 1: Brand & Contact (4 cols) -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="text-ember-500 font-mono font-bold text-xl">&lt;</span>
+          <span class="font-mono font-bold text-white text-xl tracking-tight">YouFound<span class="text-ember-500">JK</span></span>
+          <span class="text-ember-500 font-mono font-bold text-xl">/&gt;</span>
+        </div>
+        
+        <p class="text-sm text-slate-400 font-sans leading-relaxed max-w-sm">
+          Digital portfolio and theoretical physics research archive of <strong class="text-white font-medium">Jovi Koikkara</strong>. Doctoral researcher specializing in classical DFT, molecular modeling, and non-local electrolyte theory.
+        </p>
+
+        <div class="pt-2">
+          <a 
+            href="mailto:jovi.koikkara@mff.cuni.cz" 
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-ember-400 hover:text-ember-300 border border-white/[0.08] transition-colors"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            <span>jovi.koikkara@mff.cuni.cz</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 2: Experimental Affiliation Setup (5 cols) -->
+      <div class="lg:col-span-5 rounded-2xl bg-obsidian-900/70 border border-white/[0.08] p-6 space-y-4 shadow-xl">
+        <!-- Official Logos Header -->
+        <div class="flex items-center justify-between gap-4 flex-wrap pb-4 border-b border-white/[0.06]">
+          <div class="flex items-center gap-3">
+            <a 
+              href="https://www.mff.cuni.cz/cs/fakulta/vizualni-styl-mff-uk" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="block hover:opacity-85 transition-opacity"
+              title="Vizuální styl MFF UK"
+            >
+              <img 
+                src="/images/affiliation/matfyz_logo_white.webp" 
+                alt="Matfyz - Matematicko-fyzikální fakulta Univerzity Karlovy" 
+                class="h-7 w-auto object-contain" 
+              />
+            </a>
+            <span class="text-slate-600 font-mono text-xs">|</span>
+            <a 
+              href="https://www.cuni.cz" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="block hover:opacity-85 transition-opacity"
+              title="Charles University"
+            >
+              <img 
+                src="/images/affiliation/mff_uk_logo_darkbg.svg" 
+                alt="Faculty of Mathematics and Physics, Charles University" 
+                class="h-8 w-auto object-contain" 
+              />
+            </a>
+          </div>
+
+          <span class="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shrink-0">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Official Affiliation</span>
+          </span>
+        </div>
+
+        <!-- Address & Registration Details -->
+        <div class="text-xs font-mono text-slate-300 space-y-1.5 leading-relaxed">
+          <div class="font-bold text-white font-sans text-sm">
+            Univerzita Karlova, Matematicko-fyzikální fakulta
+          </div>
+          <div class="text-slate-400">
+            Ke Karlovu 3, 121 16 Praha 2, Czech Republic
+          </div>
+          <div class="text-slate-300 flex items-center gap-2">
+            <span class="text-ember-400">📍</span>
+            <span>1st Floor Karlín, Zircon Office Center</span>
+          </div>
+          <div class="text-[11px] text-slate-500 pt-1">
+            IČ: 00216208 · DIČ: CZ00216208
+          </div>
+        </div>
+
+        <!-- Official Directory & Research Group Links -->
+        <div class="pt-2 flex items-center gap-2.5 flex-wrap text-xs font-mono">
+          <a 
+            href="https://www.mff.cuni.cz/cs/fakulta/organizacni-struktura/lide?hdl=17664" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-ember-400 hover:text-ember-300 border border-white/[0.08] transition-colors"
+          >
+            <span>Faculty Directory</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+
+          <a 
+            href="https://www.karlin.mff.cuni.cz/~allolio/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] transition-colors"
+          >
+            <span>Biomembrane Group</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 3: Navigation Links (3 cols) -->
+      <div class="lg:col-span-3 space-y-4">
+        <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
+          Navigation
+        </h4>
+        <ul class="space-y-2 text-xs font-mono">
+          <li>
+            <a href="/#start" class="text-slate-400 hover:text-ember-400 transition-colors">Start / About</a>
+          </li>
+          <li>
+            <a href="/#work" class="text-slate-400 hover:text-ember-400 transition-colors">Research & Projects</a>
+          </li>
+          <li>
+            <a href="/#publications" class="text-slate-400 hover:text-ember-400 transition-colors">Publications</a>
+          </li>
+          <li>
+            <a href="/#ventures" class="text-slate-400 hover:text-ember-400 transition-colors">Ventures & OSS</a>
+          </li>
+          <li>
+            <a href="/notes/" class="text-slate-400 hover:text-ember-400 transition-colors">Theoretical Notes</a>
+          </li>
+          <li>
+            <a href="/#contact" class="text-slate-400 hover:text-ember-400 transition-colors">Contact / Message</a>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
-    <!-- Tech Stack Pill -->
-    <div class="flex items-center gap-2 text-xs font-mono text-slate-500 bg-white/[0.02] px-3 py-1.5 rounded-full border border-white/[0.05]">
-      <span>Built with</span>
-      <span class="text-slate-300 font-semibold">Astro</span>
-      <span>•</span>
-      <span class="text-slate-300 font-semibold">TypeScript</span>
-      <span>•</span>
-      <span class="text-ember-400 font-semibold">Tailwind CSS</span>
-    </div>
+    <!-- Bottom Bar: Tech Stack & Copyright -->
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+      <div class="flex items-center gap-2">
+        <span>© {currentYear} Jovi Koikkara · Charles University (MFF)</span>
+      </div>
 
-    <!-- Copyright & Back to Top -->
-    <div class="flex items-center gap-6">
-      <p class="text-xs font-mono text-slate-500">
-        © {currentYear} Jovi K. All rights reserved.
-      </p>
+      <div class="flex items-center gap-2 bg-white/[0.02] px-3 py-1.5 rounded-full border border-white/[0.05]">
+        <span>Built with</span>
+        <span class="text-slate-300 font-semibold">Astro</span>
+        <span>•</span>
+        <span class="text-slate-300 font-semibold">TypeScript</span>
+        <span>•</span>
+        <span class="text-ember-400 font-semibold">Tailwind CSS</span>
+      </div>
 
       <a 
         href="#start" 
