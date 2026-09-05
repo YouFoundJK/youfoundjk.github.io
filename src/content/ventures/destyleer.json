@@ -1,0 +1,18 @@
+{
+  "title": "De'Style'eR Studio",
+  "role": "Lead Strategist",
+  "type": "Creative Enterprise",
+  "typeColor": "bg-cyber-gold/10 text-cyber-gold border-cyber-gold/25",
+  "category": ["Creative Enterprise"],
+  "description": "An independent creative studio and design enterprise crafting bespoke visual identities, logo marks, vector illustrations, and digital design experiences for modern brands and academic initiatives.",
+  "url": "https://www.destyleer.in.net/",
+  "primaryLabel": "Visit Studio />",
+  "highlights": [
+    "Bespoke brand identity design, logo engineering, and typography systems",
+    "Digital vector artistry, technical diagrams, and editorial illustrations",
+    "End-to-end design consulting and bespoke online web experiences"
+  ],
+  "tags": ["Brand Identity", "Logo Engineering", "Vector Art", "UI/UX", "Creative Direction"],
+  "featured": true,
+  "order": 4
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Full Calendar (Remastered)",
+  "role": "Main Developer & Maintainer",
+  "type": "FOSS / Open Source",
+  "typeColor": "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
+  "category": ["FOSS / Open Source", "Developer Tooling"],
+  "description": "A professional, extensible calendar engine for the Obsidian knowledge management platform. Seamlessly integrates local markdown event notes with remote CalDAV and ICS feeds, built with an offline-first data integrity architecture.",
+  "url": "https://obsidian-full-calendar-remastered.github.io/plugin-full-calendar/",
+  "secondaryUrl": "https://github.com/obsidian-full-calendar-remastered/plugin-full-calendar",
+  "secondaryLabel": "GitHub Repo",
+  "highlights": [
+    "Multi-provider calendar engine (CalDAV, Google / Apple ICS, local markdown)",
+    "Interactive agenda, day, week, month, and timeline scheduling views",
+    "Two-way synchronization with YAML frontmatter data validation"
+  ],
+  "tags": ["TypeScript", "Obsidian API", "FullCalendar v6", "CalDAV", "ICS Engine"],
+  "featured": true,
+  "order": 1
+}

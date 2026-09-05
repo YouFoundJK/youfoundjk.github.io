@@ -1,0 +1,20 @@
+{
+  "title": "TeXcore for Obsidian",
+  "role": "Creator & Lead Developer",
+  "type": "Developer Tooling",
+  "typeColor": "bg-indigo-500/10 text-indigo-400 border-indigo-500/25",
+  "category": ["Developer Tooling", "FOSS / Open Source"],
+  "description": "A minimalistic, high-performance LaTeX assistant for automatic equation numbering, referencing, and client-side TikZ rendering powered by an in-browser WebAssembly TeX engine in Obsidian.md.",
+  "url": "https://youfoundjk.github.io/TeXcore/",
+  "primaryLabel": "Docs & Guides />",
+  "secondaryUrl": "https://github.com/YouFoundJK/TeXcore",
+  "secondaryLabel": "GitHub Repo",
+  "highlights": [
+    "Client-side WebAssembly TeX engine for zero-dependency TikZ compilation in background Web Workers",
+    "Auto equation numbering, custom ID tagging, and search-based fuzzy autocomplete via \\eqref",
+    "Advanced single-note and batch folder PDF export engine with custom typography overrides"
+  ],
+  "tags": ["TypeScript", "WebAssembly", "Obsidian Plugin", "LaTeX", "TikZ", "FOSS"],
+  "featured": true,
+  "order": 3
+}

@@ -88,6 +88,26 @@ const galleryCollection = defineCollection({
   }),
 });
 
+const venturesCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.string(),
+    role: z.string(),
+    type: z.string(),
+    typeColor: z.string().default('bg-emerald-500/10 text-emerald-400 border-emerald-500/25'),
+    category: z.array(z.string()),
+    description: z.string(),
+    url: z.string(),
+    primaryLabel: z.string().default('Live Project />'),
+    secondaryUrl: z.string().optional(),
+    secondaryLabel: z.string().optional(),
+    highlights: z.array(z.string()),
+    tags: z.array(z.string()),
+    featured: z.boolean().default(true),
+    order: z.number().default(99),
+  }),
+});
+
 export const collections = {
   projects: projectsCollection,
   publications: publicationsCollection,
@@ -95,4 +115,6 @@ export const collections = {
   experience: experienceCollection,
   certifications: certificationsCollection,
   gallery: galleryCollection,
+  ventures: venturesCollection,
 };
+

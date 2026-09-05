@@ -1,0 +1,20 @@
+{
+  "title": "LLM-Telemetry-Proxy",
+  "role": "Creator & Lead Architect",
+  "type": "AI Infrastructure",
+  "typeColor": "bg-cyan-500/10 text-cyan-400 border-cyan-500/25",
+  "category": ["AI Infrastructure", "Developer Tooling", "FOSS / Open Source"],
+  "description": "A lightweight, zero-intrusive reverse proxy and full control dashboard for LLM workflows. Passively measures TTFB, generation speed, token counts, and cost metrics with real-time payload inspection and rate guards.",
+  "url": "https://youfoundjk.github.io/LLM-Telemetry-Proxy/",
+  "primaryLabel": "Docs & Demo />",
+  "secondaryUrl": "https://github.com/YouFoundJK/LLM-Telemetry-Proxy",
+  "secondaryLabel": "GitHub Repo",
+  "highlights": [
+    "Zero-intrusive reverse proxy architecture with near-zero latency overhead",
+    "Real-time token analytics, streaming chunk inspection, and date-aware cost tracking",
+    "24-hour token budget supervisor and concurrency queuing to prevent 429 errors"
+  ],
+  "tags": ["Python", "FastAPI", "LLM Telemetry", "Reverse Proxy", "Observability", "AI Ops"],
+  "featured": true,
+  "order": 2
+}
