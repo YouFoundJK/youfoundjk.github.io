@@ -66,16 +66,12 @@ const ventures: Venture[] = [
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {ventures.map(v => (
         <div 
-          class="vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-glow-card shadow-xl group"
-          data-tilt
-          style="transform-style: preserve-3d; perspective: 1000px;"
+          class="vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-7 sm:p-8 flex flex-col justify-between transition-colors duration-300 hover:shadow-glow-card shadow-xl group"
         >
-          <!-- Top Badges & Role with 3D elevation -->
-          <div class="vanilla-3d-tilt-content" style="transform-style: preserve-3d;">
-            <div 
-              class="flex items-center justify-between gap-4 flex-wrap mb-4"
-              style="transform: translateZ(45px);"
-            >
+          <!-- Top Content Area -->
+          <div>
+            <!-- Top Badges & Role -->
+            <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
               <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border shadow-sm ${v.typeColor}`}>
                 {v.type}
               </span>
@@ -85,8 +81,8 @@ const ventures: Venture[] = [
               </span>
             </div>
 
-            <!-- Title with highest 3D elevation -->
-            <div style="transform: translateZ(65px);">
+            <!-- Title -->
+            <div>
               <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
                 <a href={v.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
                   <span>{v.title}</span>
@@ -98,18 +94,12 @@ const ventures: Venture[] = [
             </div>
 
             <!-- Description -->
-            <p 
-              class="mt-4 text-sm text-slate-300 leading-relaxed font-sans"
-              style="transform: translateZ(35px);"
-            >
+            <p class="mt-4 text-sm text-slate-300 leading-relaxed font-sans">
               {v.description}
             </p>
 
-            <!-- Highlights Checklist floating in 3D -->
-            <ul 
-              class="mt-6 space-y-2.5"
-              style="transform: translateZ(45px);"
-            >
+            <!-- Highlights Checklist -->
+            <ul class="mt-6 space-y-2.5">
               {v.highlights.map(h => (
                 <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
                   <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,16 +111,10 @@ const ventures: Venture[] = [
             </ul>
           </div>
 
-          <!-- Footer: Tags & Action Buttons with elevated 3D depth -->
-          <div 
-            class="mt-8 pt-6 border-t border-white/[0.06] space-y-5"
-            style="transform: translateZ(50px); transform-style: preserve-3d;"
-          >
+          <!-- Footer: Tags & Action Buttons (Cleanly positioned inside box) -->
+          <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
             <!-- Tech / Category Tags -->
-            <div 
-              class="flex flex-wrap gap-2"
-              style="transform: translateZ(35px);"
-            >
+            <div class="flex flex-wrap gap-2">
               {v.tags.map(t => (
                 <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
                   #{t}
@@ -138,16 +122,13 @@ const ventures: Venture[] = [
               ))}
             </div>
 
-            <!-- Links -->
-            <div 
-              class="flex items-center gap-3 flex-wrap"
-              style="transform: translateZ(55px);"
-            >
+            <!-- Links: Refined, elegant buttons with standard sizing -->
+            <div class="flex items-center gap-3 flex-wrap">
               <a 
                 href={v.url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-ember-500 hover:bg-ember-600 text-white font-mono text-xs font-semibold shadow-glow-ember hover:scale-[1.03] active:scale-[0.98] transition-all"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-ember-500/10 hover:bg-ember-500/20 text-ember-400 hover:text-ember-300 border border-ember-500/30 hover:border-ember-500/50 font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
               >
                 <span>Live Project /&gt;</span>
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,9 +141,9 @@ const ventures: Venture[] = [
                   href={v.secondaryUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 font-mono text-xs font-semibold transition-all hover:scale-[1.02]"
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
                 >
-                  <svg class="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 fill-current text-slate-400" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
                   </svg>
                   <span>{v.secondaryLabel || "Repository"}</span>
