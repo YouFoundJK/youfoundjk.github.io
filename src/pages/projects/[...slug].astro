@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await project.render();
+const { Content, headings } = await project.render();
 const { title, subtitle, abstract, category, date, thumbnail, links } = project.data;
 ---
 
@@ -24,7 +25,7 @@ const { title, subtitle, abstract, category, date, thumbnail, links } = project.
 >
   <Header />
 
-  <article class="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+  <article class="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <!-- Back Button -->
     <div class="mb-10">
       <a 
@@ -39,7 +40,7 @@ const { title, subtitle, abstract, category, date, thumbnail, links } = project.
     </div>
 
     <!-- Project Header -->
-    <header class="mb-12 space-y-4">
+    <header class="mb-12 space-y-4 max-w-4xl">
       <div class="flex flex-wrap items-center gap-2">
         {category.map((cat: string) => (
           <span class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-ember-500/10 text-ember-400 border border-ember-500/25">
@@ -109,52 +110,62 @@ const { title, subtitle, abstract, category, date, thumbnail, links } = project.
       </div>
     </header>
 
-    <!-- Featured Image -->
-    {thumbnail && (
-      <div class="mb-12 rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl bg-obsidian-900">
-        <img 
-          src={thumbnail} 
-          alt={title} 
-          class="w-full max-h-[480px] object-contain bg-obsidian-950 p-4"
-        />
+    <!-- Main Grid: Content + Sticky ToC -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <!-- Article Content Column -->
+      <div class="lg:col-span-8 xl:col-span-9 max-w-4xl">
+        {thumbnail && (
+          <div class="mb-10 rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl bg-obsidian-900">
+            <img 
+              src={thumbnail} 
+              alt={title} 
+              class="w-full max-h-[440px] object-contain bg-obsidian-950 p-4"
+            />
+          </div>
+        )}
+
+        <!-- Abstract Callout -->
+        <div class="mb-10 p-6 rounded-xl bg-obsidian-900/60 border-l-4 border-ember-500 border border-white/[0.06]">
+          <h3 class="text-xs font-mono uppercase tracking-widest text-ember-400 font-bold mb-2">Abstract</h3>
+          <p class="text-slate-300 leading-relaxed font-sans text-sm sm:text-base">
+            {abstract}
+          </p>
+        </div>
+
+        <!-- Rendered Markdown Body -->
+        <div class="prose prose-invert prose-slate max-w-none prose-headings:font-display prose-headings:text-white prose-a:text-ember-400 hover:prose-a:text-ember-300 prose-code:text-ember-300 prose-code:font-mono">
+          <Content />
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="mt-16 pt-8 border-t border-white/[0.08] flex items-center justify-between">
+          <a 
+            href="/#work" 
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] font-mono text-xs font-semibold transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>All Projects</span>
+          </a>
+
+          {links.pdf && (
+            <a 
+              href={links.pdf} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-ember-500 hover:bg-ember-600 text-white font-mono text-xs font-semibold shadow-glow-ember transition-all"
+            >
+              <span>Download PDF /&gt;</span>
+            </a>
+          )}
+        </div>
       </div>
-    )}
 
-    <!-- Abstract Callout -->
-    <div class="mb-12 p-6 rounded-xl bg-obsidian-900/60 border-l-4 border-ember-500 border border-white/[0.06]">
-      <h3 class="text-xs font-mono uppercase tracking-widest text-ember-400 font-bold mb-2">Abstract</h3>
-      <p class="text-slate-300 leading-relaxed font-sans text-sm sm:text-base">
-        {abstract}
-      </p>
-    </div>
-
-    <!-- Article Markdown Content -->
-    <div class="prose prose-invert prose-slate max-w-none prose-headings:font-display prose-headings:text-white prose-a:text-ember-400 hover:prose-a:text-ember-300 prose-code:text-ember-300 prose-code:font-mono">
-      <Content />
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="mt-16 pt-8 border-t border-white/[0.08] flex items-center justify-between">
-      <a 
-        href="/#work" 
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] font-mono text-xs font-semibold transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
-        <span>All Projects</span>
-      </a>
-
-      {links.pdf && (
-        <a 
-          href={links.pdf} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-ember-500 hover:bg-ember-600 text-white font-mono text-xs font-semibold shadow-glow-ember transition-all"
-        >
-          <span>Download PDF /&gt;</span>
-        </a>
-      )}
+      <!-- Sticky Table of Contents Column -->
+      <div class="hidden lg:block lg:col-span-4 xl:col-span-3">
+        <TableOfContents headings={headings} />
+      </div>
     </div>
   </article>
 

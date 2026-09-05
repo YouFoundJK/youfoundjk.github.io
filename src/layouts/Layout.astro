@@ -48,6 +48,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- User Analytics (Umami Events) -->
+    <script is:inline src="/scripts/analytics-events.js" defer></script>
   </head>
   <body class="bg-obsidian-950 text-slate-200 min-h-screen selection:bg-ember-500 selection:text-white relative">
     <!-- Ambient Atmospheric Glows -->

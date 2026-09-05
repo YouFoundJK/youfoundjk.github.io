@@ -1,3 +1,4 @@
+@import 'katex/dist/katex.min.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 @tailwind base;
@@ -119,4 +120,101 @@
 @keyframes blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   Obsidian & MkDocs Style Callouts / Admonitions
+   ========================================================================== */
+.obsidian-callout {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border-left-width: 4px;
+  background-color: rgba(14, 17, 23, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.5);
+}
+
+.obsidian-callout .callout-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: capitalize;
+}
+
+.obsidian-callout > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Note / Info (Default Cyan / Blue) */
+.obsidian-callout.callout-note,
+.obsidian-callout.callout-info {
+  border-left-color: #38bdf8;
+  background: linear-gradient(to right, rgba(56, 189, 248, 0.08), rgba(14, 17, 23, 0.6));
+}
+.obsidian-callout.callout-note .callout-title,
+.obsidian-callout.callout-info .callout-title {
+  color: #38bdf8;
+}
+
+/* Tip / Success (Emerald Green) */
+.obsidian-callout.callout-tip,
+.obsidian-callout.callout-success {
+  border-left-color: #10b981;
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.08), rgba(14, 17, 23, 0.6));
+}
+.obsidian-callout.callout-tip .callout-title,
+.obsidian-callout.callout-success .callout-title {
+  color: #10b981;
+}
+
+/* Important / Ember (Brand Primary) */
+.obsidian-callout.callout-important,
+.obsidian-callout.callout-abstract {
+  border-left-color: #ff5722;
+  background: linear-gradient(to right, rgba(255, 87, 34, 0.08), rgba(14, 17, 23, 0.6));
+}
+.obsidian-callout.callout-important .callout-title,
+.obsidian-callout.callout-abstract .callout-title {
+  color: #ff5722;
+}
+
+/* Warning / Caution (Amber / Yellow) */
+.obsidian-callout.callout-warning,
+.obsidian-callout.callout-caution {
+  border-left-color: #f59e0b;
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.08), rgba(14, 17, 23, 0.6));
+}
+.obsidian-callout.callout-warning .callout-title,
+.obsidian-callout.callout-caution .callout-title {
+  color: #f59e0b;
+}
+
+/* Theorem / Math Lemma (Purple / Violet) */
+.obsidian-callout.callout-theorem,
+.obsidian-callout.callout-lemma,
+.obsidian-callout.callout-proof {
+  border-left-color: #a855f7;
+  background: linear-gradient(to right, rgba(168, 85, 247, 0.08), rgba(14, 17, 23, 0.6));
+}
+.obsidian-callout.callout-theorem .callout-title,
+.obsidian-callout.callout-lemma .callout-title,
+.obsidian-callout.callout-proof .callout-title {
+  color: #a855f7;
+}
+
+/* KaTeX equations responsive overflow */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.75rem 0;
+  margin: 1.5rem 0 !important;
+}
+
+.katex {
+  font-size: 1.1em;
 }

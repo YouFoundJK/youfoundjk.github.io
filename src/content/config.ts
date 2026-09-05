@@ -20,6 +20,19 @@ const projectsCollection = defineCollection({
   }),
 });
 
+const notesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    category: z.string().default('Research Notes'),
+    date: z.string().optional(),
+    lastUpdated: z.string().optional(),
+    order: z.number().default(99),
+  }),
+});
+
 const experienceCollection = defineCollection({
   type: 'data',
   schema: z.object({
@@ -60,6 +73,7 @@ const galleryCollection = defineCollection({
 
 export const collections = {
   projects: projectsCollection,
+  notes: notesCollection,
   experience: experienceCollection,
   certifications: certificationsCollection,
   gallery: galleryCollection,
