@@ -20,6 +20,23 @@ const projectsCollection = defineCollection({
   }),
 });
 
+const publicationsCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.string(),
+    authors: z.string(),
+    journal: z.string(),
+    year: z.string(),
+    type: z.enum(['Journal Article', 'Preprint', 'Thesis', 'Research Monograph']),
+    doi: z.string().optional(),
+    url: z.string().optional(),
+    pdf: z.string().optional(),
+    slides: z.string().optional(),
+    code: z.string().optional(),
+    order: z.number().default(99),
+  }),
+});
+
 const notesCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -73,6 +90,7 @@ const galleryCollection = defineCollection({
 
 export const collections = {
   projects: projectsCollection,
+  publications: publicationsCollection,
   notes: notesCollection,
   experience: experienceCollection,
   certifications: certificationsCollection,

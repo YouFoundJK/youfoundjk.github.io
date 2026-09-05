@@ -14,23 +14,26 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
 
 {filteredHeadings.length > 0 && (
-  <nav class="toc-container p-5 rounded-2xl bg-obsidian-900/60 border border-white/[0.06] backdrop-blur-md sticky top-28" aria-label="Table of contents">
-    <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-4 pb-2 border-b border-white/[0.06]">
+  <nav 
+    class="toc-container p-5 rounded-2xl bg-obsidian-900/90 border border-white/[0.08] backdrop-blur-xl shadow-xl sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto" 
+    aria-label="Table of contents"
+  >
+    <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-4 pb-2 border-b border-white/[0.08]">
       <svg class="w-4 h-4 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
       </svg>
       <span>Outline / ToC</span>
     </div>
 
-    <ul class="space-y-2 text-xs font-mono">
+    <ul class="space-y-1.5 text-xs font-mono">
       {filteredHeadings.map(h => (
-        <li class={h.depth === 3 ? 'pl-4' : ''}>
+        <li class={h.depth === 3 ? 'pl-3' : ''}>
           <a 
             href={`#${h.slug}`}
-            class="toc-link block text-slate-400 hover:text-ember-400 transition-colors py-1 leading-snug truncate"
+            class="toc-link block text-slate-400 hover:text-ember-400 transition-all py-1 leading-snug rounded px-1.5 hover:bg-white/[0.03]"
             data-slug={h.slug}
           >
-            {h.depth === 3 && <span class="text-slate-600 mr-1.5">↳</span>}
+            {h.depth === 3 && <span class="text-slate-600 mr-1">↳</span>}
             {h.text}
           </a>
         </li>
@@ -53,10 +56,10 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
           const id = entry.target.id;
           links.forEach(l => {
             if (l.getAttribute('data-slug') === id) {
-              l.classList.add('text-ember-400', 'font-bold', 'translate-x-1');
+              l.classList.add('text-ember-400', 'font-bold', 'bg-white/[0.05]');
               l.classList.remove('text-slate-400');
             } else {
-              l.classList.remove('text-ember-400', 'font-bold', 'translate-x-1');
+              l.classList.remove('text-ember-400', 'font-bold', 'bg-white/[0.05]');
               l.classList.add('text-slate-400');
             }
           });
