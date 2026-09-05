@@ -2,7 +2,7 @@
 title: "II. Plasma Instability in Hall Thrusters - A Numerical Study"
 subtitle: "Numerical Analysis of the General Dispersion Relation"
 abstract: "Numerical analysis of the General Dispersion relation for Hall Thrusters previously proposed by the author. The study involved algorithms including fixed point iteration and conjugate gradient descent using multiprocessing self-made modules in Python."
-order: 1
+order: 2
 category: ["Plasma Physics", "Computational Physics"]
 date: "2023"
 featured: true

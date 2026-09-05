@@ -2,7 +2,7 @@
 title: "Symplectic Geometry"
 subtitle: "Mathematical Framework of Classical Mechanics & Geometric Quantization"
 abstract: "Advanced reading project on the mathematical foundations of Classical Mechanics. Incorporates Lie Algebra, Symplectic Manifolds, and Complex vector spaces exploring the analogy between the Wave-Corpuscular theory of light and Geometric Quantization."
-order: 4
+order: 5
 category: ["Mathematical Physics"]
 date: "2021"
 featured: true

@@ -2,7 +2,7 @@
 title: "Designing Twisted Bilayer Graphene Based Devices"
 subtitle: "Master's Thesis at Karlsruhe Institute of Technology (KIT)"
 abstract: "Project involved designing and standardizing a step-by-step nanofabrication and assembly procedure for hBN encapsulated twisted Bilayer Graphene (tBLG) stacks under Dr. Romain Danneau."
-order: 2
+order: 3
 category: ["2D Heterostructures", "Condensed Matter"]
 date: "2022"
 featured: true

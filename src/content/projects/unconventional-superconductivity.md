@@ -2,7 +2,7 @@
 title: "Unconventional Superconductivity"
 subtitle: "Theory of Cooper Pairing & Many-Body Formalism"
 abstract: "NIUS research project exploring the theoretical framework of Unconventional Superconductivity under Prof. Rajdeep Sensarma at TIFR. Investigated Bogoliubov transformations, Path Integrals, and Green's functions for spin-coupled Cooper pairing."
-order: 6
+order: 7
 category: ["Condensed Matter", "Mathematical Physics"]
 date: "2020"
 featured: true

@@ -2,7 +2,7 @@
 title: "Database GUI Design"
 subtitle: "Multithreaded Administrative Desktop Application"
 abstract: "An in-depth Python-based graphical user interface implemented using Tkinter with multithreading architecture. Features data logging, multi-parameter filtering, persistent storage, and secure administrative credential management."
-order: 5
+order: 6
 category: ["Computational Physics", "Software"]
 date: "2021"
 featured: true

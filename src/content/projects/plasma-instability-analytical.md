@@ -2,7 +2,7 @@
 title: "I. Plasma Instability in Hall Thrusters - An Analytical Study"
 subtitle: "Theoretical Analysis & Derivation of Generalized Dispersion Relation"
 abstract: "Theoretical analysis of the microinstabilities involved in Hall Thrusters and derivation of a Generalized Dispersion Relation. Study involves Linearised perturbation of the collisionless Vlasov equations, stability, and growth rate analysis using asymptotic techniques."
-order: 3
+order: 4
 category: ["Plasma Physics", "Mathematical Physics"]
 date: "2022"
 featured: true
