@@ -1,0 +1,10 @@
+{
+  "title": "Machine Learning",
+  "issuer": "Stanford & Coursera (Andrew Ng)",
+  "issuerUrl": "https://www.coursera.org/learn/machine-learning",
+  "period": "May 2021 – Jul 2021",
+  "logo": "/images/brands/coursera.svg",
+  "description": "Comprehensive foundation in supervised learning (regression, logistic classification, neural networks, SVMs) and unsupervised learning (clustering, PCA, recommender systems).",
+  "certificateUrl": "",
+  "order": 2
+}

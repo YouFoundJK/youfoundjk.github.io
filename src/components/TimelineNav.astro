@@ -1,0 +1,99 @@
+---
+const sections = [
+  { id: 'start', label: 'Start />' },
+  { id: 'work', label: 'Work />' },
+  { id: 'experience', label: 'Experience />' },
+  { id: 'certifications', label: 'Certifications />' },
+  { id: 'gallery', label: 'Gallery />' },
+  { id: 'contact', label: 'Contact />' },
+];
+---
+
+<aside 
+  class="hidden lg:flex fixed left-6 xl:left-12 top-1/2 -translate-y-1/2 z-40 flex-col items-start pointer-events-none"
+  aria-label="Section Navigation"
+>
+  <!-- Vertical Rail Line -->
+  <div class="relative flex flex-col items-start gap-8 py-4 pointer-events-auto">
+    <!-- Ambient glowing track background -->
+    <div class="absolute left-[7px] top-0 bottom-0 w-[2px] bg-white/[0.08] -z-10"></div>
+    <!-- Active track fill -->
+    <div id="timeline-progress-bar" class="absolute left-[7px] top-0 w-[2px] bg-ember-500 transition-all duration-300 -z-10" style="height: 0%;"></div>
+
+    {sections.map(section => (
+      <a
+        href={`#${section.id}`}
+        data-target={section.id}
+        class="timeline-node group flex items-center gap-3 cursor-pointer select-none transition-all duration-300"
+      >
+        <!-- Node Pip Ring -->
+        <span class="relative flex items-center justify-center w-4 h-4 rounded-full border-2 border-slate-600 bg-obsidian-950 group-hover:border-ember-400 group-hover:scale-125 transition-all duration-200">
+          <span class="node-dot w-1.5 h-1.5 rounded-full bg-transparent group-hover:bg-ember-400 transition-colors"></span>
+          <span class="node-ping absolute inset-0 rounded-full bg-ember-500 opacity-0 transition-opacity"></span>
+        </span>
+        <!-- Section Label -->
+        <span class="node-label text-xs font-mono tracking-wider text-slate-500 group-hover:text-slate-200 transition-colors">
+          {section.label}
+        </span>
+      </a>
+    ))}
+  </div>
+</aside>
+
+<script>
+  function setupTimelineNav() {
+    const nodes = document.querySelectorAll<HTMLAnchorElement>('.timeline-node');
+    if (!nodes.length) return;
+
+    const progressBar = document.getElementById('timeline-progress-bar');
+    const sectionIds = Array.from(nodes).map(n => n.getAttribute('data-target')).filter(Boolean) as string[];
+    const sectionEls = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const activeId = entry.target.id;
+          let activeIndex = 0;
+
+          nodes.forEach((node, index) => {
+            const isMatch = node.getAttribute('data-target') === activeId;
+            const ring = node.querySelector('span:first-child');
+            const dot = node.querySelector('.node-dot');
+            const label = node.querySelector('.node-label');
+            const ping = node.querySelector('.node-ping');
+
+            if (isMatch) {
+              activeIndex = index;
+              ring?.classList.add('border-ember-500', 'shadow-glow-ember', 'scale-125');
+              ring?.classList.remove('border-slate-600');
+              dot?.classList.add('bg-ember-500');
+              label?.classList.add('text-ember-400', 'font-bold');
+              label?.classList.remove('text-slate-500');
+              ping?.classList.add('animate-ping', 'opacity-75');
+            } else {
+              ring?.classList.remove('border-ember-500', 'shadow-glow-ember', 'scale-125');
+              ring?.classList.add('border-slate-600');
+              dot?.classList.remove('bg-ember-500');
+              label?.classList.remove('text-ember-400', 'font-bold');
+              label?.classList.add('text-slate-500');
+              ping?.classList.remove('animate-ping', 'opacity-75');
+            }
+          });
+
+          if (progressBar && nodes.length > 1) {
+            const pct = (activeIndex / (nodes.length - 1)) * 100;
+            progressBar.style.height = `${pct}%`;
+          }
+        }
+      });
+    }, {
+      rootMargin: '-30% 0px -60% 0px',
+      threshold: 0
+    });
+
+    sectionEls.forEach(el => observer.observe(el));
+  }
+
+  document.addEventListener('DOMContentLoaded', setupTimelineNav);
+  document.addEventListener('astro:page-load', setupTimelineNav);
+</script>

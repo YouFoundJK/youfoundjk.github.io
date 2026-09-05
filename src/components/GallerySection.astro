@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+
+const galleryItems = await getCollection('gallery');
+const sortedGallery = galleryItems.sort((a, b) => a.data.order - b.data.order);
+---
+
+<section id="gallery" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="mb-14">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
+        <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
+        <span>Gallery /&gt;</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        Creative Pursuits & Moments
+      </h2>
+      <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
+        Sketches, caricatures, digital art experiments, and snapshots from Karlsruhe and Mumbai.
+      </p>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+      {sortedGallery.map(item => (
+        <div 
+          class="gallery-card group relative aspect-square rounded-2xl overflow-hidden bg-obsidian-900 border border-white/[0.06] hover:border-ember-500/40 cursor-pointer transition-all duration-300 shadow-md"
+          data-image={item.data.image}
+          data-title={item.data.title}
+          data-category={item.data.category}
+        >
+          <img 
+            src={item.data.image} 
+            alt={item.data.title} 
+            loading="lazy"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+          />
+
+          <!-- Overlay gradient -->
+          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+            <span class="text-[11px] font-mono text-ember-400 uppercase tracking-wider">{item.data.category}</span>
+            <h4 class="text-sm font-bold font-display text-white">{item.data.title}</h4>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="gallery-lightbox" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+    <button 
+      id="lightbox-close"
+      type="button"
+      class="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+      aria-label="Close Lightbox"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <div class="max-w-4xl max-h-[85vh] flex flex-col items-center">
+      <img id="lightbox-img" src="" alt="" class="max-h-[75vh] max-w-full rounded-xl object-contain shadow-2xl border border-white/10" />
+      <div class="mt-4 text-center">
+        <h3 id="lightbox-title" class="text-lg font-bold font-display text-white"></h3>
+        <p id="lightbox-category" class="text-xs font-mono text-ember-400"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupGalleryLightbox() {
+    const cards = document.querySelectorAll<HTMLElement>('.gallery-card');
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxCat = document.getElementById('lightbox-category');
+    const closeBtn = document.getElementById('lightbox-close');
+
+    if (!lightbox || !lightboxImg) return;
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const src = card.getAttribute('data-image');
+        const title = card.getAttribute('data-title');
+        const cat = card.getAttribute('data-category');
+
+        if (src) {
+          lightboxImg.src = src;
+          if (lightboxTitle) lightboxTitle.textContent = title || '';
+          if (lightboxCat) lightboxCat.textContent = cat || '';
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    const closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    };
+
+    closeBtn?.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupGalleryLightbox);
+  document.addEventListener('astro:page-load', setupGalleryLightbox);
+</script>

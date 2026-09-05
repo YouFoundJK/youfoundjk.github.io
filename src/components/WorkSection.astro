@@ -1,0 +1,110 @@
+---
+import { getCollection } from 'astro:content';
+import TiltCard from './TiltCard.astro';
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+// Extract distinct categories
+const rawCategories = sortedProjects.flatMap(p => p.data.category);
+const categories = ['All', ...Array.from(new Set(rawCategories))];
+---
+
+<section id="work" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header with Breadcrumb Node -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
+          <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
+          <span>Work /&gt;</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+          Research & Projects
+        </h2>
+        <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
+          Theoretical and computational studies in plasma physics, nanotechnology, condensed matter, and scientific software.
+        </p>
+      </div>
+
+      <div class="text-xs font-mono text-slate-500">
+        <span class="text-ember-400 font-bold">{sortedProjects.length}</span> projects documented
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="mb-12 overflow-x-auto pb-2 scrollbar-none">
+      <div class="flex items-center gap-2 min-w-max" id="project-filters">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            data-filter={cat}
+            class={`filter-btn px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all duration-200 border ${
+              idx === 0 
+                ? 'bg-ember-500 text-white border-ember-500 shadow-glow-ember' 
+                : 'bg-white/[0.03] text-slate-400 border-white/[0.08] hover:text-white hover:bg-white/[0.06]'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- 3D Parallax Tilt Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+      {sortedProjects.map(project => (
+        <TiltCard project={project} />
+      ))}
+    </div>
+
+    <!-- Empty State Fallback -->
+    <div id="no-projects" class="hidden text-center py-16 text-slate-500 font-mono text-sm">
+      No projects found under this category.
+    </div>
+  </div>
+</section>
+
+<!-- Filter Interactivity Script -->
+<script>
+  function setupFilters() {
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const cards = document.querySelectorAll<HTMLElement>('.project-card');
+    const noProjectsMsg = document.getElementById('no-projects');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        if (!filter) return;
+
+        // Update active button styling
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
+          b.classList.add('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.08]');
+        });
+        btn.classList.remove('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.08]');
+        btn.classList.add('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
+
+        let matchCount = 0;
+        cards.forEach(card => {
+          const rawCategories = card.getAttribute('data-categories') || '[]';
+          const cardCategories = JSON.parse(rawCategories) as string[];
+
+          if (filter === 'All' || cardCategories.includes(filter)) {
+            card.style.display = 'flex';
+            matchCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (noProjectsMsg) {
+          noProjectsMsg.classList.toggle('hidden', matchCount > 0);
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupFilters);
+  document.addEventListener('astro:page-load', setupFilters);
+</script>

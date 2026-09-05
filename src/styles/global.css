@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #07090e;
+    --color-surface: #0e1117;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-ember: #ff5722;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #07090e;
+    color: #e2e8f0;
+  }
+
+  body {
+    background-color: #07090e;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Custom sleek scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #07090e;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+    border: 2px solid #07090e;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff5722;
+  }
+}
+
+/* Subtle ambient cyber grid */
+.bg-cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(14, 17, 23, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 87, 34, 0.3);
+}
+
+/* 3D Tilt container setup */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-layer-base {
+  transform: translateZ(0px);
+}
+
+.tilt-layer-mid {
+  transform: translateZ(30px);
+}
+
+.tilt-layer-top {
+  transform: translateZ(60px);
+}
+
+.tilt-layer-badge {
+  transform: translateZ(80px);
+}
+
+/* Dynamic Glare Reflection */
+.tilt-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: overlay;
+  z-index: 20;
+}
+
+.tilt-card:hover .tilt-glare {
+  opacity: 1;
+}
+
+/* Cryptic decipher animation glowing cursor */
+.cryptic-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background-color: #ff5722;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}

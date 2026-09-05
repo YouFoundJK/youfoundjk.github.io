@@ -1,0 +1,42 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-auto border-t border-white/[0.06] bg-obsidian-950 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <!-- Brand -->
+    <div class="flex items-center gap-2">
+      <span class="text-ember-500 font-mono font-bold">&lt;</span>
+      <span class="font-mono font-bold text-white tracking-tight">YouFound<span class="text-ember-500">JK</span></span>
+      <span class="text-ember-500 font-mono font-bold">/&gt;</span>
+      <span class="text-xs font-mono text-slate-500 ml-3">Jovi Koikkara</span>
+    </div>
+
+    <!-- Tech Stack Pill -->
+    <div class="flex items-center gap-2 text-xs font-mono text-slate-500 bg-white/[0.02] px-3 py-1.5 rounded-full border border-white/[0.05]">
+      <span>Built with</span>
+      <span class="text-slate-300 font-semibold">Astro</span>
+      <span>•</span>
+      <span class="text-slate-300 font-semibold">TypeScript</span>
+      <span>•</span>
+      <span class="text-ember-400 font-semibold">Tailwind CSS</span>
+    </div>
+
+    <!-- Copyright & Back to Top -->
+    <div class="flex items-center gap-6">
+      <p class="text-xs font-mono text-slate-500">
+        © {currentYear} Jovi K. All rights reserved.
+      </p>
+
+      <a 
+        href="#start" 
+        class="p-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors"
+        aria-label="Back to top"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</footer>

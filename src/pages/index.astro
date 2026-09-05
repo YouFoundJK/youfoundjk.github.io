@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import TimelineNav from '@/components/TimelineNav.astro';
+import Hero from '@/components/Hero.astro';
+import WorkSection from '@/components/WorkSection.astro';
+import ExperienceSection from '@/components/ExperienceSection.astro';
+import CertificationsSection from '@/components/CertificationsSection.astro';
+import GallerySection from '@/components/GallerySection.astro';
+import ContactSection from '@/components/ContactSection.astro';
+import Footer from '@/components/Footer.astro';
+---
+
+<Layout>
+  <!-- Global Top Header -->
+  <Header />
+
+  <!-- Fixed Floating Left Navigation Rail -->
+  <TimelineNav />
+
+  <!-- Main Content Flow -->
+  <main class="w-full">
+    <Hero />
+    <WorkSection />
+    <ExperienceSection />
+    <CertificationsSection />
+    <GallerySection />
+    <ContactSection />
+  </main>
+
+  <!-- Global Footer -->
+  <Footer />
+</Layout>

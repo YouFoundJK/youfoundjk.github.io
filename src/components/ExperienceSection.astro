@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+
+const experienceList = await getCollection('experience');
+const sortedExperience = experienceList.sort((a, b) => a.data.order - b.data.order);
+
+const educationList = [
+  {
+    degree: "Integrated M.Sc. in Physics (5 Years)",
+    institution: "UM-DAE Centre for Excellence in Basic Sciences (CEBS)",
+    location: "Mumbai, India",
+    period: "2018 – 2023",
+    details: "Merit-based premier Govt. of India autonomous institute. National Entrance Screening Test (NEST) All India Rank: 72. Cumulative GPA: 8.59.",
+    logo: "/images/brands/cbslogo.svg"
+  },
+  {
+    degree: "Senior Secondary Schooling (CBSE 12th)",
+    institution: "Jawahar Navodaya Vidyalaya (JNV)",
+    location: "Ernakulam, India",
+    period: "2011 – 2017",
+    details: "Merit-based Govt. of India residential school system. Graduated 12th grade with 94.8% distinction.",
+    logo: "/images/brands/jnvlogo.svg"
+  }
+];
+---
+
+<section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
+        <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
+        <span>Experience /&gt;</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        Academic & Research Journey
+      </h2>
+      <p class="mt-2 text-base text-slate-400 font-sans max-w-2xl">
+        Research fellowships, international master's thesis, and academic foundational training.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <!-- Research Experience Column -->
+      <div>
+        <h3 class="text-xl font-display font-bold text-white mb-8 flex items-center gap-2">
+          <span class="text-ember-400 font-mono">//</span> Research Experience
+        </h3>
+
+        <div class="relative pl-6 sm:pl-8 border-l border-white/[0.1] space-y-12">
+          {sortedExperience.map(item => (
+            <div class="relative group">
+              <!-- Timeline Pip -->
+              <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-ember-500/60 bg-obsidian-950 group-hover:border-ember-400 group-hover:scale-125 transition-all"></span>
+
+              <div class="p-6 rounded-2xl bg-obsidian-900/60 border border-white/[0.06] hover:border-ember-500/30 transition-colors">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                  <div class="flex items-center gap-3">
+                    {item.data.logo && (
+                      <div class="w-10 h-10 rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0">
+                        <img src={item.data.logo} alt={item.data.institution} class="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <div>
+                      <h4 class="text-lg font-bold text-white font-display">
+                        {item.data.role}
+                      </h4>
+                      <a 
+                        href={item.data.institutionUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="text-sm font-mono text-ember-400 hover:underline"
+                      >
+                        {item.data.institution}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <span class="text-xs font-mono text-slate-400 block">{item.data.period}</span>
+                    <span class="text-xs font-mono text-slate-500 block">{item.data.location}</span>
+                  </div>
+                </div>
+
+                <p class="mt-4 text-sm text-slate-400 font-sans leading-relaxed">
+                  {item.data.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Education Column -->
+      <div>
+        <h3 class="text-xl font-display font-bold text-white mb-8 flex items-center gap-2">
+          <span class="text-cyber-cyan font-mono">//</span> Education
+        </h3>
+
+        <div class="relative pl-6 sm:pl-8 border-l border-white/[0.1] space-y-12">
+          {educationList.map(item => (
+            <div class="relative group">
+              <!-- Timeline Pip -->
+              <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-2 border-cyan-500/60 bg-obsidian-950 group-hover:border-cyan-400 group-hover:scale-125 transition-all"></span>
+
+              <div class="p-6 rounded-2xl bg-obsidian-900/60 border border-white/[0.06] hover:border-cyan-500/30 transition-colors">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                  <div class="flex items-center gap-3">
+                    {item.logo && (
+                      <div class="w-10 h-10 rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0">
+                        <img src={item.logo} alt={item.institution} class="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <div>
+                      <h4 class="text-lg font-bold text-white font-display">
+                        {item.degree}
+                      </h4>
+                      <p class="text-sm font-mono text-cyan-400">
+                        {item.institution}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <span class="text-xs font-mono text-slate-400 block">{item.period}</span>
+                    <span class="text-xs font-mono text-slate-500 block">{item.location}</span>
+                  </div>
+                </div>
+
+                <p class="mt-4 text-sm text-slate-400 font-sans leading-relaxed">
+                  {item.details}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

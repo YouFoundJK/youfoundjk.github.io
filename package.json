@@ -1,0 +1,31 @@
+{
+  "name": "youfoundjk-portfolio",
+  "version": "2.0.0",
+  "description": "Jovi Koikkara - High Performance Static Portfolio",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [
+    "portfolio",
+    "astro",
+    "static-site",
+    "physics",
+    "developer"
+  ],
+  "author": "Jovi Koikkara",
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.18.2",
+    "tailwindcss": "^3.4.19",
+    "vanilla-tilt": "^1.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16"
+  }
+}
