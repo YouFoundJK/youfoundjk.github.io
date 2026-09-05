@@ -54,7 +54,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           Creative Pursuits &amp; Moments
         </h2>
         <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
-          Sketches, caricatures, digital art experiments, and snapshots from Karlsruhe and Mumbai in their authentic aspect ratios.
+          Sketches, caricatures, digital art experiments, and snapshots.
         </p>
       </div>
 
@@ -82,44 +82,77 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       </div>
     </div>
 
-    <!-- Masonry Gallery Grid (Natural Aspect Ratios, Zero Cropping) -->
-    <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 [column-fill:_balance]" id="gallery-grid">
-      {sortedGallery.map(item => (
-        <div 
-          class="gallery-card break-inside-avoid mb-6 group relative rounded-2xl overflow-hidden bg-obsidian-900 border border-white/[0.08] hover:border-ember-500/40 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-glow-card"
-          data-image={item.data.image}
-          data-title={item.data.title}
-          data-category={item.data.category}
-        >
-          <!-- Figure image rendered with its natural intrinsic aspect ratio -->
-          <img 
-            src={item.data.image} 
-            alt={item.data.title} 
-            width={item.width}
-            height={item.height}
-            loading="lazy"
-            class="w-full h-auto block object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-            style={`aspect-ratio: ${item.aspectRatio};`}
-          />
+    <!-- Expandable Gallery Wrapper with Peek & Gradient Shadow Overlay -->
+    <div 
+      id="gallery-wrapper" 
+      class="relative group/peek cursor-pointer"
+      title="Click to expand gallery"
+    >
+      <div 
+        id="gallery-container" 
+        class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
+        style="max-height: 480px;"
+      >
+        <!-- Masonry Gallery Grid (Natural Aspect Ratios, Zero Cropping) -->
+        <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 [column-fill:_balance]" id="gallery-grid">
+          {sortedGallery.map(item => (
+            <div 
+              class="gallery-card break-inside-avoid mb-6 group relative rounded-2xl overflow-hidden bg-obsidian-900 border border-white/[0.08] hover:border-ember-500/40 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-glow-card"
+              data-image={item.data.image}
+              data-title={item.data.title}
+              data-category={item.data.category}
+            >
+              <!-- Figure image rendered with its natural intrinsic aspect ratio -->
+              <img 
+                src={item.data.image} 
+                alt={item.data.title} 
+                width={item.width}
+                height={item.height}
+                loading="lazy"
+                class="w-full h-auto block object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                style={`aspect-ratio: ${item.aspectRatio};`}
+              />
 
-          <!-- Overlay gradient with title and category pill on hover -->
-          <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 pointer-events-none">
-            <span class="text-[11px] font-mono text-ember-400 uppercase tracking-wider font-semibold mb-1">
-              {item.data.category}
-            </span>
-            <h4 class="text-sm font-bold font-display text-white leading-snug">
-              {item.data.title}
-            </h4>
-          </div>
+              <!-- Overlay gradient with title and category pill on hover -->
+              <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 pointer-events-none">
+                <span class="text-[11px] font-mono text-ember-400 uppercase tracking-wider font-semibold mb-1">
+                  {item.data.category}
+                </span>
+                <h4 class="text-sm font-bold font-display text-white leading-snug">
+                  {item.data.title}
+                </h4>
+              </div>
 
-          <!-- Subtle Expand Action Icon -->
-          <div class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-obsidian-950/80 backdrop-blur-md border border-white/[0.1] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-md">
-            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-            </svg>
-          </div>
+              <!-- Subtle Expand Action Icon -->
+              <div class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-obsidian-950/80 backdrop-blur-md border border-white/[0.1] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-md">
+                <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                </svg>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      <!-- Gradient Fade Overlay (Positioned exclusively over the bottom peek area) -->
+      <div 
+        id="gallery-fade-overlay" 
+        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+      ></div>
+    </div>
+
+    <!-- Toggle Show More / Show Less Button -->
+    <div class="mt-6 flex justify-center relative z-10" id="toggle-gallery-wrapper">
+      <button 
+        id="toggle-gallery-btn"
+        type="button"
+        class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group active:scale-[0.98]"
+      >
+        <span id="toggle-gallery-text">+ Show More Artworks &amp; Moments</span>
+        <svg id="toggle-gallery-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
     </div>
 
     <!-- Empty State Fallback -->
@@ -167,11 +200,74 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     const lightboxCat = document.getElementById('lightbox-category');
     const closeBtn = document.getElementById('lightbox-close');
 
-    // 1. Category Filtering
+    const toggleBtn = document.getElementById('toggle-gallery-btn');
+    const container = document.getElementById('gallery-container');
+    const wrapper = document.getElementById('gallery-wrapper');
+    const fadeOverlay = document.getElementById('gallery-fade-overlay');
+    const toggleText = document.getElementById('toggle-gallery-text');
+    const toggleIcon = document.getElementById('toggle-gallery-icon');
+    const toggleWrapper = document.getElementById('toggle-gallery-wrapper');
+
+    const PEEK_HEIGHT = '480px';
+    let isExpanded = false;
+    let currentFilter = 'All';
+
+    // 1. Show More / Less Toggle
+    function toggleExpanded(expand?: boolean) {
+      if (!container) return;
+      isExpanded = expand !== undefined ? expand : !isExpanded;
+
+      if (isExpanded) {
+        container.style.maxHeight = '4000px';
+        if (wrapper) {
+          wrapper.classList.remove('cursor-pointer');
+          wrapper.removeAttribute('title');
+        }
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '0';
+          fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.add('pointer-events-none');
+        }
+        if (toggleText) toggleText.textContent = 'Show Less />';
+        if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-6');
+          toggleWrapper.classList.add('mt-10');
+        }
+      } else {
+        container.style.maxHeight = PEEK_HEIGHT;
+        if (wrapper) {
+          wrapper.classList.add('cursor-pointer');
+          wrapper.setAttribute('title', 'Click to expand gallery');
+        }
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '1';
+          fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.remove('pointer-events-none');
+        }
+        if (toggleText) toggleText.textContent = '+ Show More Artworks & Moments';
+        if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-10');
+          toggleWrapper.classList.add('mt-6');
+        }
+
+        const gallerySection = document.getElementById('gallery');
+        gallerySection?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    toggleBtn?.addEventListener('click', () => toggleExpanded());
+    fadeOverlay?.addEventListener('click', () => {
+      if (!isExpanded) toggleExpanded(true);
+    });
+
+    // 2. Category Filtering
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.getAttribute('data-gallery-filter');
         if (!filter) return;
+        currentFilter = filter;
 
         // Update button active styling
         filterBtns.forEach(b => {
@@ -191,6 +287,21 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
             card.style.display = 'none';
           }
         });
+
+        // Automatically expand on filtered subsets so items aren't obscured
+        if (filter !== 'All') {
+          if (container) container.style.maxHeight = '4000px';
+          if (fadeOverlay) {
+            fadeOverlay.style.opacity = '0';
+            fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+            fadeOverlay.classList.add('pointer-events-none');
+          }
+          if (toggleWrapper) toggleWrapper.style.display = 'none';
+          if (wrapper) wrapper.classList.remove('cursor-pointer');
+        } else {
+          if (toggleWrapper) toggleWrapper.style.display = 'flex';
+          toggleExpanded(isExpanded);
+        }
 
         if (noItemsMsg) {
           noItemsMsg.classList.toggle('hidden', matchCount > 0);

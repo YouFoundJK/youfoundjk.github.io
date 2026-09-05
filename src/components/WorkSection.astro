@@ -148,7 +148,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           moreWrapper.removeAttribute('title');
         }
         if (fadeOverlay) fadeOverlay.style.opacity = '0';
-        if (toggleText) toggleText.textContent = 'Show Less /&gt;';
+        if (toggleText) toggleText.textContent = 'Show Less />';
         if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
         if (toggleWrapper) {
           toggleWrapper.classList.remove('mt-6');
