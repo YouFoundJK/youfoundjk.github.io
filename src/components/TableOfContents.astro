@@ -7,23 +7,29 @@ interface Heading {
 
 interface Props {
   headings: Heading[];
+  isMobile?: boolean;
 }
 
-const { headings } = Astro.props;
+const { headings, isMobile = false } = Astro.props;
 const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
 
 {filteredHeadings.length > 0 && (
   <nav 
-    class="toc-container p-5 rounded-2xl bg-obsidian-900/90 border border-white/[0.08] backdrop-blur-xl shadow-xl sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto" 
+    class={isMobile 
+      ? "toc-container text-xs font-mono" 
+      : "toc-container p-5 rounded-2xl bg-obsidian-900/90 border border-white/[0.08] backdrop-blur-xl shadow-xl sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto"
+    } 
     aria-label="Table of contents"
   >
-    <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-4 pb-2 border-b border-white/[0.08]">
-      <svg class="w-4 h-4 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
-      </svg>
-      <span>Outline / ToC</span>
-    </div>
+    {!isMobile && (
+      <div class="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-4 pb-2 border-b border-white/[0.08]">
+        <svg class="w-4 h-4 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+        </svg>
+        <span>Outline / ToC</span>
+      </div>
+    )}
 
     <ul class="space-y-1.5 text-xs font-mono">
       {filteredHeadings.map(h => (
@@ -46,6 +52,16 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
   function setupTocScrollSpy() {
     const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
     if (!links.length) return;
+
+    // Auto-close mobile drawer on link click
+    links.forEach(l => {
+      l.addEventListener('click', () => {
+        const parentDetails = l.closest('details');
+        if (parentDetails) {
+          parentDetails.removeAttribute('open');
+        }
+      });
+    });
 
     const slugs = Array.from(links).map(l => l.getAttribute('data-slug')).filter(Boolean) as string[];
     const headingEls = slugs.map(slug => document.getElementById(slug)).filter(Boolean) as HTMLElement[];

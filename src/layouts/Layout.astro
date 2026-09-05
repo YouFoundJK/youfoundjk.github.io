@@ -21,7 +21,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 <html lang="en" class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Jovi Koikkara" />
@@ -66,11 +66,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
       <slot />
     </div>
 
-    <!-- VanillaTilt Script Integration for high-performance 3D cards -->
+    <!-- VanillaTilt Script Integration (Enabled on desktop mouse/trackpads, smooth native scroll on touch) -->
     <script>
       import VanillaTilt from 'vanilla-tilt';
 
       function initTilts() {
+        // Only initialize 3D tilt on devices with a fine pointer (mouse/trackpad)
+        const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+        if (!isFinePointer) return;
+
         const tiltElements = document.querySelectorAll<HTMLElement>('.vanilla-3d-tilt');
         if (tiltElements.length > 0) {
           VanillaTilt.init(Array.from(tiltElements), {
@@ -80,6 +84,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
             glare: true,
             'max-glare': 0.25,
             scale: 1.02,
+            gyroscope: false, // Prevents erratic shaking on mobile gyroscopes
           });
         }
       }
