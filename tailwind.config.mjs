@@ -31,6 +31,7 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
+        cursive: ['Caveat', 'Dancing Script', 'cursive'],
       },
       boxShadow: {
         'glow-ember': '0 0 25px -5px rgba(255, 87, 34, 0.4)',
