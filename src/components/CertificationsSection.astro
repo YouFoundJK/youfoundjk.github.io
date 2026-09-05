@@ -33,7 +33,7 @@ const remainingCerts = sortedCerts.slice(4);
             <div class="flex items-center justify-between gap-3 mb-4">
               <span class="text-xs font-mono text-ember-400 font-medium">{cert.data.period}</span>
               {cert.data.logo && (
-                <div class="w-7 h-7 rounded bg-white p-1 flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-white p-1 flex items-center justify-center shrink-0 shadow-sm">
                   <img src={cert.data.logo} alt={cert.data.issuer} class="w-full h-full object-contain" />
                 </div>
               )}
@@ -91,7 +91,7 @@ const remainingCerts = sortedCerts.slice(4);
                 <div class="flex items-center justify-between gap-3 mb-4">
                   <span class="text-xs font-mono text-ember-400 font-medium">{cert.data.period}</span>
                   {cert.data.logo && (
-                    <div class="w-7 h-7 rounded bg-white p-1 flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-lg bg-white p-1 flex items-center justify-center shrink-0 shadow-sm">
                       <img src={cert.data.logo} alt={cert.data.issuer} class="w-full h-full object-contain" />
                     </div>
                   )}
