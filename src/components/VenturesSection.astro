@@ -3,14 +3,11 @@ import { getCollection } from 'astro:content';
 
 const allVentures = await getCollection('ventures');
 const sortedVentures = allVentures.sort((a, b) => a.data.order - b.data.order);
+const remainingCount = Math.max(0, sortedVentures.length - 2);
 
 // Extract distinct categories dynamically
 const rawCategories = sortedVentures.flatMap(v => v.data.category);
 const categories = ['All', ...Array.from(new Set(rawCategories))];
-
-const INITIAL_THRESHOLD = 2;
-const initialVentures = sortedVentures.slice(0, INITIAL_THRESHOLD);
-const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
 ---
 
 <section id="ventures" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
@@ -20,7 +17,7 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
       <div>
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
           <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
-          <span>Ventures &amp; OSS /&gt;</span>
+          <span>Ventures &amp; FOSS /&gt;</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
           Open Source &amp; Creative Enterprises
@@ -54,218 +51,128 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
       </div>
     </div>
 
-    <!-- Ventures Grid Area -->
-    <div>
-      <!-- Initial Ventures Grid (Primary Display) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="initial-ventures-grid">
-        {initialVentures.map(v => (
-          <div 
-            class="venture-card vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-7 sm:p-8 flex flex-col justify-between transition-colors duration-300 hover:shadow-glow-card shadow-xl group"
-            data-categories={JSON.stringify(v.data.category)}
-          >
-            <!-- Top Content Area -->
-            <div class="space-y-4">
-              <!-- Top Badges & Role -->
-              <div class="tilt-z-high flex items-center justify-between gap-4 flex-wrap mb-4">
-                <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border shadow-sm ${v.data.typeColor}`}>
-                  {v.data.type}
-                </span>
-                <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-ember-400 animate-pulse"></span>
-                  {v.data.role}
-                </span>
-              </div>
-
-              <!-- Title (Highest parallax elevation) -->
-              <div class="tilt-z-top">
-                <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
-                  <a href={v.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
-                    <span>{v.data.title}</span>
-                    <svg class="w-5 h-5 text-slate-400 group-hover:text-ember-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                  </a>
-                </h3>
-              </div>
-
-              <!-- Description -->
-              <p class="tilt-z-mid mt-4 text-sm text-slate-300 leading-relaxed font-sans">
-                {v.data.description}
-              </p>
-
-              <!-- Highlights Checklist -->
-              <ul class="tilt-z-high mt-6 space-y-2.5">
-                {v.data.highlights.map(h => (
-                  <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
-                    <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <!-- Footer: Tags & Action Buttons -->
-            <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
-              <!-- Tech / Category Tags -->
-              <div class="tilt-z-subtle flex flex-wrap gap-2">
-                {v.data.tags.map(t => (
-                  <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
-                    #{t}
+    <!-- Ventures Grid Area: Single Unified Grid (Populates Rows First) -->
+    <div 
+      id="more-ventures-wrapper" 
+      class="relative group/peek cursor-pointer"
+      title="Click to expand ventures & initiatives"
+    >
+      <!-- Single Unified Grid Container -->
+      <div 
+        id="more-ventures-container" 
+        class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
+        style="max-height: 520px;"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="ventures-grid">
+          {sortedVentures.map(v => (
+            <div 
+              class="venture-card vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-7 sm:p-8 flex flex-col justify-between transition-colors duration-300 hover:shadow-glow-card shadow-xl group"
+              data-categories={JSON.stringify(v.data.category)}
+            >
+              <!-- Top Content Area -->
+              <div class="space-y-4">
+                <!-- Top Badges & Role -->
+                <div class="tilt-z-high flex items-center justify-between gap-4 flex-wrap mb-4">
+                  <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border shadow-sm ${v.data.typeColor}`}>
+                    {v.data.type}
                   </span>
-                ))}
-              </div>
-
-              <!-- Links: Refined, elegant buttons with standard sizing and 3D depth -->
-              <div class="tilt-z-mid flex items-center gap-3 flex-wrap">
-                <a 
-                  href={v.data.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-ember-500/10 hover:bg-ember-500/20 text-ember-400 hover:text-ember-300 border border-ember-500/30 hover:border-ember-500/50 font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
-                >
-                  <span>{v.data.primaryLabel || "Live Project />"}</span>
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </a>
-
-                {v.data.secondaryUrl && (
-                  <a 
-                    href={v.data.secondaryUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
-                  >
-                    <svg class="w-3.5 h-3.5 fill-current text-slate-400" viewBox="0 0 24 24">
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
-                    </svg>
-                    <span>{v.data.secondaryLabel || "Repository"}</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <!-- Expandable Wrapper for Future Overflow (>4 Ventures) -->
-      {remainingVentures.length > 0 && (
-        <div 
-          id="more-ventures-wrapper" 
-          class="relative mt-8 group/peek cursor-pointer"
-          title="Click to expand ventures & initiatives"
-        >
-          <!-- Remaining Ventures Grid -->
-          <div 
-            id="more-ventures-container" 
-            class="grid grid-cols-1 lg:grid-cols-2 gap-8 transition-[max-height] duration-700 ease-in-out overflow-hidden pointer-events-none select-none"
-            style="max-height: 180px;"
-          >
-            {remainingVentures.map(v => (
-              <div 
-                class="venture-card vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-7 sm:p-8 flex flex-col justify-between transition-colors duration-300 hover:shadow-glow-card shadow-xl group"
-                data-categories={JSON.stringify(v.data.category)}
-              >
-                <!-- Top Content Area -->
-                <div class="space-y-4">
-                  <div class="tilt-z-high flex items-center justify-between gap-4 flex-wrap mb-4">
-                    <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border shadow-sm ${v.data.typeColor}`}>
-                      {v.data.type}
-                    </span>
-                    <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
-                      <span class="w-1.5 h-1.5 rounded-full bg-ember-400 animate-pulse"></span>
-                      {v.data.role}
-                    </span>
-                  </div>
-
-                  <div class="tilt-z-top">
-                    <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
-                      <a href={v.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
-                        <span>{v.data.title}</span>
-                        <svg class="w-5 h-5 text-slate-400 group-hover:text-ember-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                      </a>
-                    </h3>
-                  </div>
-
-                  <p class="tilt-z-mid mt-4 text-sm text-slate-300 leading-relaxed font-sans">
-                    {v.data.description}
-                  </p>
-
-                  <ul class="tilt-z-high mt-6 space-y-2.5">
-                    {v.data.highlights.map(h => (
-                      <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
-                        <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>{h}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-ember-400 animate-pulse"></span>
+                    {v.data.role}
+                  </span>
                 </div>
 
-                <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
-                  <div class="tilt-z-subtle flex flex-wrap gap-2">
-                    {v.data.tags.map(t => (
-                      <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
-                        #{t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div class="tilt-z-mid flex items-center gap-3 flex-wrap">
-                    <a 
-                      href={v.data.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-ember-500/10 hover:bg-ember-500/20 text-ember-400 hover:text-ember-300 border border-ember-500/30 hover:border-ember-500/50 font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
-                    >
-                      <span>{v.data.primaryLabel || "Live Project />"}</span>
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                <!-- Title (Highest parallax elevation) -->
+                <div class="tilt-z-top">
+                  <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
+                    <a href={v.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
+                      <span>{v.data.title}</span>
+                      <svg class="w-5 h-5 text-slate-400 group-hover:text-ember-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                       </svg>
                     </a>
+                  </h3>
+                </div>
 
-                    {v.data.secondaryUrl && (
-                      <a 
-                        href={v.data.secondaryUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
-                      >
-                        <svg class="w-3.5 h-3.5 fill-current text-slate-400" viewBox="0 0 24 24">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
-                        </svg>
-                        <span>{v.data.secondaryLabel || "Repository"}</span>
-                      </a>
-                    )}
-                  </div>
+                <!-- Description -->
+                <p class="tilt-z-mid mt-4 text-sm text-slate-300 leading-relaxed font-sans">
+                  {v.data.description}
+                </p>
+
+                <!-- Highlights Checklist -->
+                <ul class="tilt-z-high mt-6 space-y-2.5">
+                  {v.data.highlights.map(h => (
+                    <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
+                      <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <!-- Footer: Tags & Action Buttons -->
+              <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
+                <!-- Tech / Category Tags -->
+                <div class="tilt-z-subtle flex flex-wrap gap-2">
+                  {v.data.tags.map(t => (
+                    <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+
+                <!-- Links: Refined, elegant buttons with standard sizing and 3D depth -->
+                <div class="tilt-z-mid flex items-center gap-3 flex-wrap">
+                  <a 
+                    href={v.data.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-ember-500/10 hover:bg-ember-500/20 text-ember-400 hover:text-ember-300 border border-ember-500/30 hover:border-ember-500/50 font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
+                  >
+                    <span>{v.data.primaryLabel || "Live Project />"}</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                  </a>
+
+                  {v.data.secondaryUrl && (
+                    <a 
+                      href={v.data.secondaryUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] font-mono text-xs font-semibold transition-colors active:scale-[0.98]"
+                    >
+                      <svg class="w-3.5 h-3.5 fill-current text-slate-400" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                      </svg>
+                      <span>{v.data.secondaryLabel || "Repository"}</span>
+                    </a>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-
-          <!-- Gradient Fade Overlay -->
-          <div 
-            id="ventures-fade-overlay" 
-            class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-none transition-opacity duration-500"
-          ></div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+
+      <!-- Gradient Fade Overlay (Positioned exclusively over the bottom peek area) -->
+      <div 
+        id="ventures-fade-overlay" 
+        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+      ></div>
     </div>
 
     <!-- Show More Button -->
-    {remainingVentures.length > 0 && (
+    {remainingCount > 0 && (
       <div class="mt-6 flex justify-center relative z-10" id="toggle-ventures-wrapper">
         <button 
           id="toggle-ventures-btn"
           type="button"
           class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group active:scale-[0.98]"
         >
-          <span id="toggle-ventures-text">+ Show More Ventures ({remainingVentures.length} more)</span>
+          <span id="toggle-ventures-text">+ Show More Ventures ({remainingCount} more)</span>
           <svg id="toggle-ventures-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
@@ -295,7 +202,7 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
     const toggleIcon = document.getElementById('toggle-ventures-icon');
     const toggleWrapper = document.getElementById('toggle-ventures-wrapper');
 
-    const PEEK_HEIGHT = '180px';
+    const PEEK_HEIGHT = '520px';
     let isExpanded = false;
     let currentFilter = 'All';
 
@@ -307,14 +214,16 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
       if (isExpanded) {
         moreContainer.style.overflow = 'hidden';
         moreContainer.style.maxHeight = '4000px';
-        moreContainer.classList.remove('pointer-events-none', 'select-none');
-        moreContainer.classList.add('pointer-events-auto');
 
         if (moreWrapper) {
           moreWrapper.classList.remove('cursor-pointer');
           moreWrapper.removeAttribute('title');
         }
-        if (fadeOverlay) fadeOverlay.style.opacity = '0';
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '0';
+          fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.add('pointer-events-none');
+        }
         if (toggleText) toggleText.textContent = 'Show Less />';
         if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
         if (toggleWrapper) {
@@ -336,15 +245,17 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
       } else {
         moreContainer.style.overflow = 'hidden';
         moreContainer.style.maxHeight = PEEK_HEIGHT;
-        moreContainer.classList.add('pointer-events-none', 'select-none');
-        moreContainer.classList.remove('pointer-events-auto');
 
         if (moreWrapper) {
           moreWrapper.classList.add('cursor-pointer');
           moreWrapper.setAttribute('title', 'Click to expand ventures & initiatives');
         }
-        if (fadeOverlay) fadeOverlay.style.opacity = '1';
-        if (toggleText) toggleText.textContent = `+ Show More Ventures (${moreContainer.children.length} more)`;
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '1';
+          fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.remove('pointer-events-none');
+        }
+        if (toggleText) toggleText.textContent = `+ Show More Ventures (${cards.length - 2} more)`;
         if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
         if (toggleWrapper) {
           toggleWrapper.classList.remove('mt-10');
@@ -364,8 +275,8 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
     }
 
     // Clicking the peek area while collapsed also expands the ventures
-    if (moreWrapper) {
-      moreWrapper.addEventListener('click', () => {
+    if (fadeOverlay) {
+      fadeOverlay.addEventListener('click', () => {
         if (!isExpanded) {
           toggleExpanded(true);
         }
@@ -387,48 +298,68 @@ const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
         btn.classList.remove('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.08]');
         btn.classList.add('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
 
-        let visibleCount = 0;
-        cards.forEach(card => {
-          const rawCats = card.getAttribute('data-categories');
-          let cardCategories: string[] = [];
-          if (rawCats) {
-            try {
-              cardCategories = JSON.parse(rawCats);
-            } catch (e) {
-              cardCategories = [rawCats];
+        let matchCount = 0;
+
+        if (filter === 'All') {
+          // Reset to default collapse/expand behavior for 'All'
+          if (toggleWrapper) toggleWrapper.style.display = 'flex';
+          if (fadeOverlay) {
+            fadeOverlay.style.display = 'block';
+          }
+          if (moreContainer) {
+            moreContainer.style.overflow = isExpanded ? 'visible' : 'hidden';
+            moreContainer.style.maxHeight = isExpanded ? '4000px' : PEEK_HEIGHT;
+          }
+          if (fadeOverlay) {
+            fadeOverlay.style.opacity = isExpanded ? '0' : '1';
+            if (isExpanded) {
+              fadeOverlay.classList.add('pointer-events-none');
+              fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+            } else {
+              fadeOverlay.classList.remove('pointer-events-none');
+              fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
             }
           }
 
-          if (filter === 'All' || cardCategories.includes(filter)) {
+          cards.forEach(card => {
             card.style.display = 'flex';
-            visibleCount++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
-
-        // If filtering to a specific category, expand remaining container to show any matching cards
-        if (filter !== 'All' && moreContainer) {
-          moreContainer.style.overflow = 'visible';
-          moreContainer.style.maxHeight = '4000px';
-          moreContainer.classList.remove('pointer-events-none', 'select-none');
-          moreContainer.classList.add('pointer-events-auto');
-          if (fadeOverlay) fadeOverlay.style.opacity = '0';
+            matchCount++;
+          });
+        } else {
+          // When filtering by a specific topic, reveal all matching cards in unified grid
           if (toggleWrapper) toggleWrapper.style.display = 'none';
-          if (moreWrapper) moreWrapper.classList.remove('cursor-pointer');
-        } else if (filter === 'All' && moreContainer) {
-          // Restore toggle state
-          if (toggleWrapper) toggleWrapper.style.display = 'flex';
-          toggleExpanded(isExpanded);
+          if (fadeOverlay) {
+            fadeOverlay.style.display = 'none';
+            fadeOverlay.classList.add('pointer-events-none');
+          }
+          if (moreContainer) {
+            moreContainer.style.overflow = 'visible';
+            moreContainer.style.maxHeight = 'none';
+          }
+          if (moreWrapper) {
+            moreWrapper.classList.remove('cursor-pointer');
+          }
+
+          cards.forEach(card => {
+            const rawCategories = card.getAttribute('data-categories') || '[]';
+            let cardCategories: string[] = [];
+            try {
+              cardCategories = JSON.parse(rawCategories);
+            } catch (e) {
+              cardCategories = [rawCategories];
+            }
+
+            if (cardCategories.includes(filter)) {
+              card.style.display = 'flex';
+              matchCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
         }
 
-        // Show/hide empty state message
         if (noVenturesMsg) {
-          if (visibleCount === 0) {
-            noVenturesMsg.classList.remove('hidden');
-          } else {
-            noVenturesMsg.classList.add('hidden');
-          }
+          noVenturesMsg.classList.toggle('hidden', matchCount > 0);
         }
 
         // Reinitialize tilts for visible cards

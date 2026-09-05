@@ -4,9 +4,7 @@ import TiltCard from './TiltCard.astro';
 
 const allProjects = await getCollection('projects');
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
-
-const initialProjects = sortedProjects.slice(0, 3);
-const remainingProjects = sortedProjects.slice(3);
+const remainingCount = Math.max(0, sortedProjects.length - 3);
 
 // Extract distinct categories
 const rawCategories = sortedProjects.flatMap(p => p.data.category);
@@ -23,7 +21,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           <span>Work /&gt;</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-          Research & Projects
+          Research &amp; Projects
         </h2>
         <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
           Theoretical and computational studies in plasma physics, nanotechnology, condensed matter, and scientific software.
@@ -54,51 +52,41 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       </div>
     </div>
 
-    <!-- 3D Parallax Tilt Cards Area -->
-    <div>
-      <!-- Initial 3 Projects Grid (100% visible, unobstructed) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="initial-projects-grid">
-        {initialProjects.map(project => (
-          <TiltCard project={project} />
-        ))}
+    <!-- 3D Parallax Tilt Cards Area: Single Unified Grid (Populates Rows First) -->
+    <div 
+      id="more-projects-wrapper" 
+      class="relative group/peek cursor-pointer"
+      title="Click to expand research & projects"
+    >
+      <!-- Single Unified Grid Container -->
+      <div 
+        id="more-projects-container" 
+        class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
+        style="max-height: 640px;"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+          {sortedProjects.map(project => (
+            <TiltCard project={project} />
+          ))}
+        </div>
       </div>
 
-      <!-- Expandable Wrapper for Remaining Projects (Shows second row barely, then shades it) -->
-      {remainingProjects.length > 0 && (
-        <div 
-          id="more-projects-wrapper" 
-          class="relative mt-8 group/peek cursor-pointer"
-          title="Click to expand research & projects"
-        >
-          <!-- Remaining Projects Grid (Collapsed peek height: 175px) -->
-          <div 
-            id="more-projects-container" 
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-[max-height] duration-700 ease-in-out overflow-hidden pointer-events-none select-none"
-            style="max-height: 175px;"
-          >
-            {remainingProjects.map(project => (
-              <TiltCard project={project} />
-            ))}
-          </div>
-
-          <!-- Gradient Fade Overlay (Positioned exclusively over the peeked second row) -->
-          <div 
-            id="projects-fade-overlay" 
-            class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-none transition-opacity duration-500"
-          ></div>
-        </div>
-      )}
+      <!-- Gradient Fade Overlay (Positioned exclusively over the peeked second row) -->
+      <div 
+        id="projects-fade-overlay" 
+        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+      ></div>
     </div>
 
     <!-- Standard More Button -->
-    {remainingProjects.length > 0 && (
+    {remainingCount > 0 && (
       <div class="mt-6 flex justify-center relative z-10" id="toggle-projects-wrapper">
         <button 
           id="toggle-projects-btn"
           type="button"
           class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group active:scale-[0.98]"
         >
-          <span id="toggle-projects-text">+ Show More Research & Projects ({remainingProjects.length} more)</span>
+          <span id="toggle-projects-text">+ Show More Research &amp; Projects ({remainingCount} more)</span>
           <svg id="toggle-projects-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
@@ -128,7 +116,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     const toggleIcon = document.getElementById('toggle-projects-icon');
     const toggleWrapper = document.getElementById('toggle-projects-wrapper');
 
-    const PEEK_HEIGHT = '175px';
+    const PEEK_HEIGHT = '640px';
     let isExpanded = false;
     let currentFilter = 'All';
 
@@ -147,7 +135,11 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           moreWrapper.classList.remove('cursor-pointer');
           moreWrapper.removeAttribute('title');
         }
-        if (fadeOverlay) fadeOverlay.style.opacity = '0';
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '0';
+          fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.add('pointer-events-none');
+        }
         if (toggleText) toggleText.textContent = 'Show Less />';
         if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
         if (toggleWrapper) {
@@ -169,15 +161,19 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       } else {
         moreContainer.style.overflow = 'hidden';
         moreContainer.style.maxHeight = PEEK_HEIGHT;
-        moreContainer.classList.add('pointer-events-none', 'select-none');
-        moreContainer.classList.remove('pointer-events-auto');
+        moreContainer.classList.remove('pointer-events-none', 'select-none');
+        moreContainer.classList.add('pointer-events-auto');
 
         if (moreWrapper) {
           moreWrapper.classList.add('cursor-pointer');
           moreWrapper.setAttribute('title', 'Click to expand research & projects');
         }
-        if (fadeOverlay) fadeOverlay.style.opacity = '1';
-        if (toggleText) toggleText.textContent = `+ Show More Research & Projects (${moreContainer.children.length} more)`;
+        if (fadeOverlay) {
+          fadeOverlay.style.opacity = '1';
+          fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
+          fadeOverlay.classList.remove('pointer-events-none');
+        }
+        if (toggleText) toggleText.textContent = `+ Show More Research & Projects (${cards.length - 3} more)`;
         if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
         if (toggleWrapper) {
           toggleWrapper.classList.remove('mt-10');
@@ -197,8 +193,8 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     }
 
     // Clicking the peek area while collapsed also expands the projects
-    if (moreWrapper) {
-      moreWrapper.addEventListener('click', () => {
+    if (fadeOverlay) {
+      fadeOverlay.addEventListener('click', () => {
         if (!isExpanded) {
           toggleExpanded(true);
         }
@@ -227,17 +223,19 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           if (toggleWrapper) toggleWrapper.style.display = 'flex';
           if (fadeOverlay) {
             fadeOverlay.style.display = 'block';
-            fadeOverlay.style.opacity = isExpanded ? '0' : '1';
           }
           if (moreContainer) {
             moreContainer.style.overflow = isExpanded ? 'visible' : 'hidden';
             moreContainer.style.maxHeight = isExpanded ? '4000px' : PEEK_HEIGHT;
+          }
+          if (fadeOverlay) {
+            fadeOverlay.style.opacity = isExpanded ? '0' : '1';
             if (isExpanded) {
-              moreContainer.classList.remove('pointer-events-none', 'select-none');
-              moreContainer.classList.add('pointer-events-auto');
+              fadeOverlay.classList.add('pointer-events-none');
+              fadeOverlay.classList.remove('pointer-events-auto', 'cursor-pointer');
             } else {
-              moreContainer.classList.add('pointer-events-none', 'select-none');
-              moreContainer.classList.remove('pointer-events-auto');
+              fadeOverlay.classList.remove('pointer-events-none');
+              fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
             }
           }
 
@@ -246,19 +244,28 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
             matchCount++;
           });
         } else {
-          // When filtering by a specific topic, reveal all matching cards across both rows
+          // When filtering by a specific topic, reveal all matching cards in unified grid
           if (toggleWrapper) toggleWrapper.style.display = 'none';
-          if (fadeOverlay) fadeOverlay.style.display = 'none';
+          if (fadeOverlay) {
+            fadeOverlay.style.display = 'none';
+            fadeOverlay.classList.add('pointer-events-none');
+          }
           if (moreContainer) {
             moreContainer.style.overflow = 'visible';
             moreContainer.style.maxHeight = 'none';
-            moreContainer.classList.remove('pointer-events-none', 'select-none');
-            moreContainer.classList.add('pointer-events-auto');
+          }
+          if (moreWrapper) {
+            moreWrapper.classList.remove('cursor-pointer');
           }
 
           cards.forEach(card => {
             const rawCategories = card.getAttribute('data-categories') || '[]';
-            const cardCategories = JSON.parse(rawCategories) as string[];
+            let cardCategories: string[] = [];
+            try {
+              cardCategories = JSON.parse(rawCategories);
+            } catch (e) {
+              cardCategories = [rawCategories];
+            }
 
             if (cardCategories.includes(filter)) {
               card.style.display = 'flex';
