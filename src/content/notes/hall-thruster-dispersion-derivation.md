@@ -65,36 +65,3 @@ $$
 
 > [!warning] Numerical Divergence in Cold Plasma Limit
 > Near cyclotron harmonics $\omega - k_y v_d \approx n\Omega_{ce}$, the derivative $\partial \varepsilon / \partial \omega \to 0$. Standard Newton-Raphson solvers diverge unless damped with fixed-point relaxation.
-
-## 4. Computational Implementation in Python
-
-Below is an excerpt from the root-finding module utilizing conjugate gradient refinement with multiprocessing:
-
-```python
-import numpy as np
-from scipy.special import iv  # Modified Bessel functions
-
-def dielectric_tensor(omega, ky, kz, vd, vthe, omega_pe, omega_pi, omega_ce, n_max=10):
-    """
-    Computes electrostatic dielectric function eps(ky, kz, omega).
-    """
-    k_perp_sq = ky**2
-    be = (k_perp_sq * (vthe / omega_ce)**2) / 2.0
-    k_sq = ky**2 + kz**2
-    lambda_de_sq = (vthe**2) / (omega_pe**2)
-    
-    # Cold unmagnetized ion response
-    chi_i = -(omega_pi**2) / (omega**2)
-    
-    # Warm magnetized electron summation
-    chi_e = 0.0
-    for n in range(-n_max, n_max + 1):
-        gamma_n = iv(n, be) * np.exp(-be)
-        denom = omega - ky * vd - n * omega_ce
-        chi_e += gamma_n / denom
-        
-    return 1.0 + chi_i - (omega_pe**2 / k_sq) * chi_e
-```
-
-> [!tip] Performance Recommendation
-> When scanning $k_y \in [10^2, 10^5] \text{ m}^{-1}$, vectorize across $\omega$ meshes on GPU using CuPy or PyTorch for a $20\times$ speedup over CPU multiprocessing.
