@@ -11,17 +11,15 @@ const slug = project.slug;
 ---
 
 <div 
-  class="project-card group relative rounded-2xl bg-obsidian-900/80 border border-white/[0.08] hover:border-ember-500/40 p-5 transition-all duration-300 hover:shadow-glow-card vanilla-3d-tilt flex flex-col justify-between overflow-hidden"
+  class="project-card group relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-5 transition-all duration-300 hover:shadow-glow-card vanilla-3d-tilt flex flex-col justify-between"
   data-categories={JSON.stringify(category)}
   style="transform-style: preserve-3d; perspective: 1000px;"
 >
-  <!-- Specular glare layer rendered automatically by VanillaTilt or CSS -->
-  
-  <div>
-    <!-- Image Media Container with depth -->
+  <div class="vanilla-3d-tilt-content" style="transform-style: preserve-3d;">
+    <!-- Image Media Container with 3D depth and shadow -->
     <div 
-      class="relative w-full aspect-video rounded-xl overflow-hidden bg-obsidian-850 mb-5 border border-white/[0.04] shadow-inner"
-      style="transform: translateZ(25px);"
+      class="relative w-full aspect-video rounded-xl overflow-hidden bg-obsidian-850 mb-5 border border-white/[0.06] shadow-lg shadow-black/50"
+      style="transform: translateZ(30px); transform-style: preserve-3d;"
     >
       <img 
         src={thumbnail} 
@@ -32,11 +30,11 @@ const slug = project.slug;
       <!-- Gradient overlay scrim for contrast -->
       <div class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/30 to-transparent"></div>
 
-      <!-- Date Badge floating in top right -->
+      <!-- Date Badge floating above image in 3D -->
       {date && (
         <span 
-          class="absolute top-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-obsidian-950/80 backdrop-blur-md border border-white/[0.1] text-slate-300"
-          style="transform: translateZ(50px);"
+          class="absolute top-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-obsidian-950/85 backdrop-blur-md border border-white/[0.1] text-slate-200 shadow-md"
+          style="transform: translateZ(55px);"
         >
           {date}
         </span>
@@ -78,10 +76,10 @@ const slug = project.slug;
     </p>
   </div>
 
-  <!-- Action Links Toolbar -->
+  <!-- Action Links Toolbar floating at elevated depth -->
   <div 
     class="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between gap-2 flex-wrap"
-    style="transform: translateZ(55px);"
+    style="transform: translateZ(50px); transform-style: preserve-3d;"
   >
     <!-- Resource Buttons (PDF, Slides, Code) -->
     <div class="flex items-center gap-1.5">

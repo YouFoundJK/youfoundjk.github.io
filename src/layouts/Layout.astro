@@ -81,16 +81,19 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
         const tiltElements = document.querySelectorAll<HTMLElement>('.vanilla-3d-tilt');
         if (tiltElements.length > 0) {
           VanillaTilt.init(Array.from(tiltElements), {
-            max: 18,
-            speed: 600,
-            perspective: 1200,
+            max: 16,
+            speed: 800,
+            perspective: 1000,
             glare: true,
-            'max-glare': 0.25,
-            scale: 1.02,
+            'max-glare': 0.22,
+            scale: 1.03,
             gyroscope: false, // Prevents erratic shaking on mobile gyroscopes
           });
         }
       }
+
+      // Expose globally so dynamically unfolded cards can initialize
+      (window as any).initTilts = initTilts;
 
       // Run on DOM loaded and Astro view transitions
       document.addEventListener('DOMContentLoaded', initTilts);

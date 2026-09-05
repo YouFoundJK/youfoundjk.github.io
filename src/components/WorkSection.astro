@@ -5,6 +5,9 @@ import TiltCard from './TiltCard.astro';
 const allProjects = await getCollection('projects');
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 
+const initialProjects = sortedProjects.slice(0, 3);
+const remainingProjects = sortedProjects.slice(3);
+
 // Extract distinct categories
 const rawCategories = sortedProjects.flatMap(p => p.data.category);
 const categories = ['All', ...Array.from(new Set(rawCategories))];
@@ -51,12 +54,52 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       </div>
     </div>
 
-    <!-- 3D Parallax Tilt Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
-      {sortedProjects.map(project => (
-        <TiltCard project={project} />
-      ))}
+    <!-- 3D Parallax Tilt Cards Area (Folded to top 3 by default) -->
+    <div class="relative">
+      <!-- Initial 3 Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="initial-projects-grid">
+        {initialProjects.map(project => (
+          <TiltCard project={project} />
+        ))}
+      </div>
+
+      <!-- Expandable Container for Remaining Projects -->
+      {remainingProjects.length > 0 && (
+        <div 
+          id="more-projects-container" 
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 transition-all duration-500 overflow-hidden"
+          style="max-height: 0; opacity: 0;"
+        >
+          {remainingProjects.map(project => (
+            <TiltCard project={project} />
+          ))}
+        </div>
+      )}
+
+      <!-- Gradient Fade Overlay (Active only when collapsed) -->
+      {remainingProjects.length > 0 && (
+        <div 
+          id="projects-fade-overlay" 
+          class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 to-transparent pointer-events-none transition-opacity duration-300"
+        ></div>
+      )}
     </div>
+
+    <!-- Standard More Button -->
+    {remainingProjects.length > 0 && (
+      <div class="mt-10 flex justify-center relative z-10" id="toggle-projects-wrapper">
+        <button 
+          id="toggle-projects-btn"
+          type="button"
+          class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group"
+        >
+          <span id="toggle-projects-text">+ Show More Research & Projects ({remainingProjects.length} more)</span>
+          <svg id="toggle-projects-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
+    )}
 
     <!-- Empty State Fallback -->
     <div id="no-projects" class="hidden text-center py-16 text-slate-500 font-mono text-sm">
@@ -65,17 +108,61 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
   </div>
 </section>
 
-<!-- Filter Interactivity Script -->
+<!-- Filter & Show More Interactivity Script -->
 <script>
-  function setupFilters() {
+  function setupWorkSection() {
     const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
     const cards = document.querySelectorAll<HTMLElement>('.project-card');
     const noProjectsMsg = document.getElementById('no-projects');
+    
+    const toggleBtn = document.getElementById('toggle-projects-btn');
+    const moreContainer = document.getElementById('more-projects-container');
+    const fadeOverlay = document.getElementById('projects-fade-overlay');
+    const toggleText = document.getElementById('toggle-projects-text');
+    const toggleIcon = document.getElementById('toggle-projects-icon');
+    const toggleWrapper = document.getElementById('toggle-projects-wrapper');
 
+    let isExpanded = false;
+    let currentFilter = 'All';
+
+    // 1. Show More / Less Toggle
+    if (toggleBtn && moreContainer) {
+      toggleBtn.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+
+        if (isExpanded) {
+          moreContainer.style.maxHeight = '4000px';
+          moreContainer.style.opacity = '1';
+          if (fadeOverlay) fadeOverlay.style.opacity = '0';
+          if (toggleText) toggleText.textContent = 'Show Less /&gt;';
+          if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+
+          // Reinitialize VanillaTilt for newly expanded cards
+          if (typeof (window as any).initTilts === 'function') {
+            setTimeout(() => (window as any).initTilts(), 50);
+          }
+        } else {
+          moreContainer.style.maxHeight = '0px';
+          moreContainer.style.opacity = '0';
+          if (fadeOverlay) fadeOverlay.style.opacity = '1';
+          if (toggleText) toggleText.textContent = `+ Show More Research & Projects (${moreContainer.children.length} more)`;
+          if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+
+          // Scroll comfortably back to the top of the work section if user scrolled down
+          const workSection = document.getElementById('work');
+          if (workSection) {
+            workSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+    }
+
+    // 2. Category Filter Bar
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.getAttribute('data-filter');
         if (!filter) return;
+        currentFilter = filter;
 
         // Update active button styling
         filterBtns.forEach(b => {
@@ -86,25 +173,57 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         btn.classList.add('bg-ember-500', 'text-white', 'border-ember-500', 'shadow-glow-ember');
 
         let matchCount = 0;
-        cards.forEach(card => {
-          const rawCategories = card.getAttribute('data-categories') || '[]';
-          const cardCategories = JSON.parse(rawCategories) as string[];
 
-          if (filter === 'All' || cardCategories.includes(filter)) {
+        if (filter === 'All') {
+          // Reset to default collapse/expand behavior for 'All'
+          if (toggleWrapper) toggleWrapper.style.display = 'flex';
+          if (fadeOverlay) {
+            fadeOverlay.style.display = 'block';
+            fadeOverlay.style.opacity = isExpanded ? '0' : '1';
+          }
+          if (moreContainer) {
+            moreContainer.style.maxHeight = isExpanded ? '4000px' : '0px';
+            moreContainer.style.opacity = isExpanded ? '1' : '0';
+          }
+
+          cards.forEach(card => {
             card.style.display = 'flex';
             matchCount++;
-          } else {
-            card.style.display = 'none';
+          });
+        } else {
+          // When filtering by a specific topic, reveal all matching cards across both rows
+          if (toggleWrapper) toggleWrapper.style.display = 'none';
+          if (fadeOverlay) fadeOverlay.style.display = 'none';
+          if (moreContainer) {
+            moreContainer.style.maxHeight = '4000px';
+            moreContainer.style.opacity = '1';
           }
-        });
+
+          cards.forEach(card => {
+            const rawCategories = card.getAttribute('data-categories') || '[]';
+            const cardCategories = JSON.parse(rawCategories) as string[];
+
+            if (cardCategories.includes(filter)) {
+              card.style.display = 'flex';
+              matchCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
 
         if (noProjectsMsg) {
           noProjectsMsg.classList.toggle('hidden', matchCount > 0);
+        }
+
+        // Ensure 3D tilts remain active
+        if (typeof (window as any).initTilts === 'function') {
+          setTimeout(() => (window as any).initTilts(), 50);
         }
       });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupFilters);
-  document.addEventListener('astro:page-load', setupFilters);
+  document.addEventListener('DOMContentLoaded', setupWorkSection);
+  document.addEventListener('astro:page-load', setupWorkSection);
 </script>
