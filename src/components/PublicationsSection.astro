@@ -25,150 +25,153 @@ const remainingPubs = sortedPubs.slice(3);
       </p>
     </div>
 
-    <!-- Publications List with Gradient Fade -->
-    <div class="relative">
-      <!-- Initial Publications (Always visible) -->
-      <div class="space-y-4">
-        {initialPubs.map(pub => (
-          <div class="group p-6 rounded-2xl bg-obsidian-900/70 border border-white/[0.06] hover:border-ember-500/40 transition-all duration-300 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="space-y-2 max-w-3xl">
-              <div class="flex items-center gap-3 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-ember-500/10 text-ember-400 border border-ember-500/25 font-semibold">
-                  {pub.data.type}
-                </span>
-                <span class="text-xs font-mono text-slate-400">
-                  {pub.data.journal} • {pub.data.year}
-                </span>
-              </div>
-
-              <h3 class="text-lg font-bold font-display text-white group-hover:text-ember-400 transition-colors leading-snug">
-                {pub.data.url ? (
-                  <a href={pub.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline">
-                    {pub.data.title}
-                  </a>
-                ) : pub.data.title}
-              </h3>
-
-              <p class="text-xs font-mono text-slate-400">
-                {pub.data.authors}
-              </p>
+    <!-- Initial Publications (Always visible, 100% uncovered) -->
+    <div class="space-y-4">
+      {initialPubs.map(pub => (
+        <div class="group p-6 rounded-2xl bg-obsidian-900/70 border border-white/[0.06] hover:border-ember-500/40 transition-all duration-300 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-3xl">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-ember-500/10 text-ember-400 border border-ember-500/25 font-semibold">
+                {pub.data.type}
+              </span>
+              <span class="text-xs font-mono text-slate-400">
+                {pub.data.journal} • {pub.data.year}
+              </span>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center gap-2 shrink-0 flex-wrap">
-              {pub.data.doi && (
-                <a 
-                  href={`https://doi.org/${pub.data.doi}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="px-3 py-1.5 rounded-lg text-xs font-mono bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 transition-colors inline-flex items-center gap-1.5"
-                >
-                  <span>DOI</span>
-                  <svg class="w-3.5 h-3.5 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                  </svg>
+            <h3 class="text-lg font-bold font-display text-white group-hover:text-ember-400 transition-colors leading-snug">
+              {pub.data.url ? (
+                <a href={pub.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline">
+                  {pub.data.title}
                 </a>
-              )}
+              ) : pub.data.title}
+            </h3>
 
-              {pub.data.pdf && (
-                <a 
-                  href={pub.data.pdf} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="px-3 py-1.5 rounded-lg text-xs font-mono bg-ember-500 hover:bg-ember-600 text-white font-semibold shadow-glow-ember transition-all inline-flex items-center gap-1.5"
-                >
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                  <span>PDF</span>
-                </a>
-              )}
-            </div>
+            <p class="text-xs font-mono text-slate-400">
+              {pub.data.authors}
+            </p>
           </div>
-        ))}
-      </div>
 
-      <!-- Expandable Row of Remaining Publications -->
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
+            {pub.data.doi && (
+              <a 
+                href={`https://doi.org/${pub.data.doi}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="px-3 py-1.5 rounded-lg text-xs font-mono bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 transition-colors inline-flex items-center gap-1.5"
+              >
+                <span>DOI</span>
+                <svg class="w-3.5 h-3.5 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            )}
+
+            {pub.data.pdf && (
+              <a 
+                href={pub.data.pdf} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="px-3 py-1.5 rounded-lg text-xs font-mono bg-ember-500 hover:bg-ember-600 text-white font-semibold shadow-glow-ember transition-all inline-flex items-center gap-1.5"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <span>PDF</span>
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Expandable Row of Remaining Publications (Peeks underneath with shadow) -->
+    {remainingPubs.length > 0 && (
       <div 
-        id="more-pubs-container" 
-        class="space-y-4 mt-4 transition-all duration-500 overflow-hidden"
-        style="max-height: 0; opacity: 0;"
+        id="more-pubs-wrapper" 
+        class="relative mt-4 group/peek cursor-pointer"
+        title="Click to expand publications"
       >
-        {remainingPubs.map(pub => (
-          <div class="group p-6 rounded-2xl bg-obsidian-900/70 border border-white/[0.06] hover:border-ember-500/40 transition-all duration-300 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="space-y-2 max-w-3xl">
-              <div class="flex items-center gap-3 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-ember-500/10 text-ember-400 border border-ember-500/25 font-semibold">
-                  {pub.data.type}
-                </span>
-                <span class="text-xs font-mono text-slate-400">
-                  {pub.data.journal} • {pub.data.year}
-                </span>
+        <div 
+          id="more-pubs-container" 
+          class="space-y-4 overflow-hidden transition-[max-height] duration-700 ease-in-out"
+          style="max-height: 85px;"
+        >
+          {remainingPubs.map(pub => (
+            <div class="group p-6 rounded-2xl bg-obsidian-900/70 border border-white/[0.06] hover:border-ember-500/40 transition-all duration-300 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div class="space-y-2 max-w-3xl">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-ember-500/10 text-ember-400 border border-ember-500/25 font-semibold">
+                    {pub.data.type}
+                  </span>
+                  <span class="text-xs font-mono text-slate-400">
+                    {pub.data.journal} • {pub.data.year}
+                  </span>
+                </div>
+
+                <h3 class="text-lg font-bold font-display text-white group-hover:text-ember-400 transition-colors leading-snug">
+                  {pub.data.url ? (
+                    <a href={pub.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline">
+                      {pub.data.title}
+                    </a>
+                  ) : pub.data.title}
+                </h3>
+
+                <p class="text-xs font-mono text-slate-400">
+                  {pub.data.authors}
+                </p>
               </div>
 
-              <h3 class="text-lg font-bold font-display text-white group-hover:text-ember-400 transition-colors leading-snug">
-                {pub.data.url ? (
-                  <a href={pub.data.url} target="_blank" rel="noopener noreferrer" class="hover:underline">
-                    {pub.data.title}
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                {pub.data.doi && (
+                  <a 
+                    href={`https://doi.org/${pub.data.doi}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="px-3 py-1.5 rounded-lg text-xs font-mono bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>DOI</span>
+                    <svg class="w-3.5 h-3.5 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
                   </a>
-                ) : pub.data.title}
-              </h3>
+                )}
 
-              <p class="text-xs font-mono text-slate-400">
-                {pub.data.authors}
-              </p>
+                {pub.data.pdf && (
+                  <a 
+                    href={pub.data.pdf} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="px-3 py-1.5 rounded-lg text-xs font-mono bg-ember-500 hover:bg-ember-600 text-white font-semibold shadow-glow-ember transition-all inline-flex items-center gap-1.5"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    <span>PDF</span>
+                  </a>
+                )}
+              </div>
             </div>
+          ))}
+        </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center gap-2 shrink-0 flex-wrap">
-              {pub.data.doi && (
-                <a 
-                  href={`https://doi.org/${pub.data.doi}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="px-3 py-1.5 rounded-lg text-xs font-mono bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 transition-colors inline-flex items-center gap-1.5"
-                >
-                  <span>DOI</span>
-                  <svg class="w-3.5 h-3.5 text-ember-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                  </svg>
-                </a>
-              )}
-
-              {pub.data.pdf && (
-                <a 
-                  href={pub.data.pdf} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="px-3 py-1.5 rounded-lg text-xs font-mono bg-ember-500 hover:bg-ember-600 text-white font-semibold shadow-glow-ember transition-all inline-flex items-center gap-1.5"
-                >
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                  <span>PDF</span>
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <!-- Gradient Fade Overlay (Only when more items exist) -->
-      {remainingPubs.length > 0 && (
+        <!-- Gradient Fade Overlay (Positioned exclusively over the peeking publication) -->
         <div 
           id="pubs-fade-overlay" 
-          class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 to-transparent pointer-events-none transition-opacity duration-300"
+          class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
         ></div>
-      )}
-    </div>
+      </div>
+    )}
 
     <!-- Standard More Button -->
     {remainingPubs.length > 0 && (
-      <div class="mt-8 flex justify-center relative z-10">
+      <div class="mt-6 flex justify-center relative z-10" id="toggle-pubs-wrapper">
         <button 
           id="toggle-pubs-btn"
           type="button"
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group active:scale-[0.98]"
         >
           <span id="toggle-pubs-text">+ Show More Publications ({remainingPubs.length} more)</span>
           <svg id="toggle-pubs-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,34 +187,67 @@ const remainingPubs = sortedPubs.slice(3);
   function setupPubsToggle() {
     const btn = document.getElementById('toggle-pubs-btn');
     const container = document.getElementById('more-pubs-container');
+    const wrapper = document.getElementById('more-pubs-wrapper');
     const overlay = document.getElementById('pubs-fade-overlay');
     const text = document.getElementById('toggle-pubs-text');
     const icon = document.getElementById('toggle-pubs-icon');
+    const toggleWrapper = document.getElementById('toggle-pubs-wrapper');
 
     if (!btn || !container) return;
 
+    const PEEK_HEIGHT = '85px';
     let isExpanded = false;
 
-    btn.addEventListener('click', () => {
-      isExpanded = !isExpanded;
+    function toggleExpanded(expand?: boolean) {
+      if (!container) return;
+      isExpanded = expand !== undefined ? expand : !isExpanded;
 
       if (isExpanded) {
         container.style.maxHeight = '2000px';
-        container.style.opacity = '1';
-        if (overlay) overlay.style.opacity = '0';
+        if (wrapper) {
+          wrapper.classList.remove('cursor-pointer');
+          wrapper.removeAttribute('title');
+        }
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.classList.remove('pointer-events-auto', 'cursor-pointer');
+          overlay.classList.add('pointer-events-none');
+        }
         if (text) text.textContent = 'Show Less />';
         if (icon) icon.style.transform = 'rotate(180deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-6');
+          toggleWrapper.classList.add('mt-10');
+        }
       } else {
-        container.style.maxHeight = '0px';
-        container.style.opacity = '0';
-        if (overlay) overlay.style.opacity = '1';
-        if (text) text.textContent = `+ Show More Publications (3 more)`;
+        container.style.maxHeight = PEEK_HEIGHT;
+        if (wrapper) {
+          wrapper.classList.add('cursor-pointer');
+          wrapper.setAttribute('title', 'Click to expand publications');
+        }
+        if (overlay) {
+          overlay.style.opacity = '1';
+          overlay.classList.add('pointer-events-auto', 'cursor-pointer');
+          overlay.classList.remove('pointer-events-none');
+        }
+        if (text) text.textContent = `+ Show More Publications (${container.children.length} more)`;
         if (icon) icon.style.transform = 'rotate(0deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-10');
+          toggleWrapper.classList.add('mt-6');
+        }
 
         const pubSection = document.getElementById('publications');
         pubSection?.scrollIntoView({ behavior: 'smooth' });
       }
-    });
+    }
+
+    btn.addEventListener('click', () => toggleExpanded());
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        if (!isExpanded) toggleExpanded(true);
+      });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', setupPubsToggle);

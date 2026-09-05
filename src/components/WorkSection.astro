@@ -62,7 +62,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       <div 
         id="more-projects-container" 
         class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
-        style="max-height: 640px;"
+        style="max-height: 720px;"
       >
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
           {sortedProjects.map(project => (
@@ -74,7 +74,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       <!-- Gradient Fade Overlay (Positioned exclusively over the peeked second row) -->
       <div 
         id="projects-fade-overlay" 
-        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+        class="absolute inset-x-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
       ></div>
     </div>
 
@@ -116,9 +116,33 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     const toggleIcon = document.getElementById('toggle-projects-icon');
     const toggleWrapper = document.getElementById('toggle-projects-wrapper');
 
-    const PEEK_HEIGHT = '640px';
+    const PEEK_AMOUNT = 140;
     let isExpanded = false;
     let currentFilter = 'All';
+
+    // Calculate dynamic peek so the shadow covers ONLY the second row and NEVER touches Row 1
+    function updatePeekLayout() {
+      if (isExpanded || currentFilter !== 'All') return;
+      if (!moreContainer || !fadeOverlay || cards.length <= 3) return;
+
+      const firstTop = cards[0].offsetTop;
+      let row2Card: HTMLElement | null = null;
+      for (let i = 0; i < cards.length; i++) {
+        if (cards[i].offsetTop > firstTop + 10) {
+          row2Card = cards[i];
+          break;
+        }
+      }
+
+      if (row2Card) {
+        const row2Top = row2Card.offsetTop;
+        const collapsedHeight = row2Top + PEEK_AMOUNT;
+        moreContainer.style.maxHeight = `${collapsedHeight}px`;
+        fadeOverlay.style.top = `${row2Top}px`;
+        fadeOverlay.style.height = `${PEEK_AMOUNT}px`;
+        fadeOverlay.style.bottom = 'auto';
+      }
+    }
 
     // 1. Show More / Less Toggle Function
     function toggleExpanded(expand?: boolean) {
@@ -160,7 +184,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         }
       } else {
         moreContainer.style.overflow = 'hidden';
-        moreContainer.style.maxHeight = PEEK_HEIGHT;
+        updatePeekLayout();
         moreContainer.classList.remove('pointer-events-none', 'select-none');
         moreContainer.classList.add('pointer-events-auto');
 
@@ -226,7 +250,11 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           }
           if (moreContainer) {
             moreContainer.style.overflow = isExpanded ? 'visible' : 'hidden';
-            moreContainer.style.maxHeight = isExpanded ? '4000px' : PEEK_HEIGHT;
+            if (isExpanded) {
+              moreContainer.style.maxHeight = '4000px';
+            } else {
+              updatePeekLayout();
+            }
           }
           if (fadeOverlay) {
             fadeOverlay.style.opacity = isExpanded ? '0' : '1';
@@ -286,6 +314,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         }
       });
     });
+
+    // Auto-calculate on resize and initial render
+    window.addEventListener('resize', updatePeekLayout);
+    setTimeout(updatePeekLayout, 50);
   }
 
   document.addEventListener('DOMContentLoaded', setupWorkSection);

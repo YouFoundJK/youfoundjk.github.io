@@ -57,11 +57,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       class="relative group/peek cursor-pointer"
       title="Click to expand ventures & initiatives"
     >
-      <!-- Single Unified Grid Container -->
       <div 
         id="more-ventures-container" 
         class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
-        style="max-height: 520px;"
+        style="max-height: 650px;"
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="ventures-grid">
           {sortedVentures.map(v => (
@@ -157,10 +156,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         </div>
       </div>
 
-      <!-- Gradient Fade Overlay (Positioned exclusively over the bottom peek area) -->
+      <!-- Gradient Fade Overlay (Positioned exclusively over the peeking second row) -->
       <div 
         id="ventures-fade-overlay" 
-        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+        class="absolute inset-x-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
       ></div>
     </div>
 
@@ -202,9 +201,33 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     const toggleIcon = document.getElementById('toggle-ventures-icon');
     const toggleWrapper = document.getElementById('toggle-ventures-wrapper');
 
-    const PEEK_HEIGHT = '520px';
+    const PEEK_AMOUNT = 130;
     let isExpanded = false;
     let currentFilter = 'All';
+
+    // Calculate dynamic peek so the shadow covers ONLY the second row and NEVER touches Row 1
+    function updatePeekLayout() {
+      if (isExpanded || currentFilter !== 'All') return;
+      if (!moreContainer || !fadeOverlay || cards.length <= 2) return;
+
+      const firstTop = cards[0].offsetTop;
+      let row2Card: HTMLElement | null = null;
+      for (let i = 0; i < cards.length; i++) {
+        if (cards[i].offsetTop > firstTop + 10) {
+          row2Card = cards[i];
+          break;
+        }
+      }
+
+      if (row2Card) {
+        const row2Top = row2Card.offsetTop;
+        const collapsedHeight = row2Top + PEEK_AMOUNT;
+        moreContainer.style.maxHeight = `${collapsedHeight}px`;
+        fadeOverlay.style.top = `${row2Top}px`;
+        fadeOverlay.style.height = `${PEEK_AMOUNT}px`;
+        fadeOverlay.style.bottom = 'auto';
+      }
+    }
 
     // 1. Show More / Less Toggle Function
     function toggleExpanded(expand?: boolean) {
@@ -244,7 +267,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         }
       } else {
         moreContainer.style.overflow = 'hidden';
-        moreContainer.style.maxHeight = PEEK_HEIGHT;
+        updatePeekLayout();
 
         if (moreWrapper) {
           moreWrapper.classList.add('cursor-pointer');
@@ -308,7 +331,11 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           }
           if (moreContainer) {
             moreContainer.style.overflow = isExpanded ? 'visible' : 'hidden';
-            moreContainer.style.maxHeight = isExpanded ? '4000px' : PEEK_HEIGHT;
+            if (isExpanded) {
+              moreContainer.style.maxHeight = '4000px';
+            } else {
+              updatePeekLayout();
+            }
           }
           if (fadeOverlay) {
             fadeOverlay.style.opacity = isExpanded ? '0' : '1';
@@ -368,6 +395,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         }
       });
     });
+
+    // Auto-calculate on resize and initial render
+    window.addEventListener('resize', updatePeekLayout);
+    setTimeout(updatePeekLayout, 50);
   }
 
   // Support initial load and Astro client-side page transitions

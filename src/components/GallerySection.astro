@@ -91,7 +91,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       <div 
         id="gallery-container" 
         class="overflow-hidden transition-[max-height] duration-700 ease-in-out"
-        style="max-height: 480px;"
+        style="max-height: 700px;"
       >
         <!-- Masonry Gallery Grid (Natural Aspect Ratios, Zero Cropping) -->
         <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 [column-fill:_balance]" id="gallery-grid">
@@ -134,10 +134,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         </div>
       </div>
 
-      <!-- Gradient Fade Overlay (Positioned exclusively over the bottom peek area) -->
+      <!-- Gradient Fade Overlay (Positioned exclusively over the peeking second row) -->
       <div 
         id="gallery-fade-overlay" 
-        class="absolute inset-x-0 bottom-0 h-44 sm:h-52 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
+        class="absolute inset-x-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-auto cursor-pointer transition-opacity duration-500"
       ></div>
     </div>
 
@@ -208,9 +208,32 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     const toggleIcon = document.getElementById('toggle-gallery-icon');
     const toggleWrapper = document.getElementById('toggle-gallery-wrapper');
 
-    const PEEK_HEIGHT = '480px';
+    const PEEK_AMOUNT = 130;
     let isExpanded = false;
     let currentFilter = 'All';
+
+    // Calculate dynamic peek so the shadow covers ONLY the second row and NEVER touches Row 1
+    function updateGalleryPeek() {
+      if (isExpanded || currentFilter !== 'All') return;
+      if (!container || !fadeOverlay || cards.length <= 3) return;
+
+      const firstTop = cards[0].offsetTop;
+      let maxRow1Bottom = 0;
+      cards.forEach(c => {
+        if (Math.abs(c.offsetTop - firstTop) < 15) {
+          const bottom = c.offsetTop + c.offsetHeight;
+          if (bottom > maxRow1Bottom) maxRow1Bottom = bottom;
+        }
+      });
+
+      if (maxRow1Bottom > 0) {
+        const collapsedHeight = maxRow1Bottom + PEEK_AMOUNT;
+        container.style.maxHeight = `${collapsedHeight}px`;
+        fadeOverlay.style.top = `${maxRow1Bottom}px`;
+        fadeOverlay.style.height = `${PEEK_AMOUNT}px`;
+        fadeOverlay.style.bottom = 'auto';
+      }
+    }
 
     // 1. Show More / Less Toggle
     function toggleExpanded(expand?: boolean) {
@@ -235,7 +258,7 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           toggleWrapper.classList.add('mt-10');
         }
       } else {
-        container.style.maxHeight = PEEK_HEIGHT;
+        updateGalleryPeek();
         if (wrapper) {
           wrapper.classList.add('cursor-pointer');
           wrapper.setAttribute('title', 'Click to expand gallery');
@@ -300,7 +323,16 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           if (wrapper) wrapper.classList.remove('cursor-pointer');
         } else {
           if (toggleWrapper) toggleWrapper.style.display = 'flex';
-          toggleExpanded(isExpanded);
+          if (isExpanded) {
+            if (container) container.style.maxHeight = '4000px';
+          } else {
+            updateGalleryPeek();
+            if (fadeOverlay) {
+              fadeOverlay.style.opacity = '1';
+              fadeOverlay.classList.remove('pointer-events-none');
+              fadeOverlay.classList.add('pointer-events-auto', 'cursor-pointer');
+            }
+          }
         }
 
         if (noItemsMsg) {
@@ -308,6 +340,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
         }
       });
     });
+
+    // Auto-calculate on resize and initial render
+    window.addEventListener('resize', updateGalleryPeek);
+    setTimeout(updateGalleryPeek, 50);
 
     // 2. Lightbox Interaction
     if (!lightbox || !lightboxImg) return;
