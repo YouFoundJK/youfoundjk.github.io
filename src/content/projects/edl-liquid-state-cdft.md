@@ -4,7 +4,7 @@ subtitle: "A Hierarchical Classical Density-Functional Theory for Ions and Coars
 abstract: "A thermodynamically consistent classical density-functional theory (cDFT) bridging a species-resolved civilized electrolyte model with a PC-SAFT coarse-grained molecular description of water. Developed at the Mathematical Institute, Charles University, this research models the simultaneous redistribution of ions, orientation of molecular solvent dipoles, and liquid packing restructuring at charged interfaces."
 order: 1
 category: ["Computational Biophysics", "Liquid State Theory", "Classical DFT", "Soft Matter"]
-date: "2024 – Present"
+date: "2024"
 featured: true
 thumbnail: "/images/projects/casus_cdft.webp"
 links:
@@ -31,28 +31,38 @@ At electrified solid-liquid interfaces—such as electrochemical cells, colloida
 
 The system is formulated through a controlled thermodynamic free-energy functional hierarchy for species-resolved ions $\{i \in \text{ions}\}$ and an orientable dipolar solvent density $\rho_w(\mathbf{r}, \hat{\mathbf{u}})$:
 
-$$\Omega[\{\rho_i\}, \rho_w] = \mathcal{F}_{\text{id}} + \mathcal{F}_{\text{WBII}} + \mathcal{F}_{\text{el}}^{\text{MF}} + \mathcal{F}_{\text{MSA}}^{\text{res}} + \int \sum_\alpha \rho_\alpha(\mathbf{r}) \left( V_\alpha^{\text{ext}}(\mathbf{r}) - \mu_\alpha \right) d\mathbf{r}$$
+$$
+\Omega[\{\rho_i\}, \rho_w] = \mathcal{F}_{\text{id}} + \mathcal{F}_{\text{WBII}} + \mathcal{F}_{\text{el}}^{\text{MF}} + \mathcal{F}_{\text{MSA}}^{\text{res}} + \int \sum_\alpha \rho_\alpha(\mathbf{r}) \left( V_\alpha^{\text{ext}}(\mathbf{r}) - \mu_\alpha \right) d\mathbf{r}
+$$
 
 ### Electrostatic Mean-Field Free Energy ($\mathcal{F}_{\text{el}}^{\text{MF}}$)
 For a planar slab geometry with cross-sectional area $A$ and boundary conditions $\phi(0) = \Phi_0$ and $\phi(L) = 0$, the electrostatic mean-field contribution in Gaussian units is:
 
-$$\frac{\mathcal{F}_{\text{el}}^{\text{MF}}}{A} = \int_0^L \left[ \frac{1}{8\pi} \left(\phi'(z)\right)^2 - \rho_q(z)\phi(z) - P_z(z)\phi'(z) \right] dz$$
+$$
+\frac{\mathcal{F}_{\text{el}}^{\text{MF}}}{A} = \int_0^L \left[ \frac{1}{8\pi} \left(\phi'(z)\right)^2 - \rho_q(z)\phi(z) - P_z(z)\phi'(z) \right] dz
+$$
 
 where the reduced charge density $\rho_q(z)$ and polarization field $P_z(z)$ are defined via the first orientational moment:
 
-$$\rho_q(z) = e \sum_i z_i \rho_i(z), \qquad P_z(z) = \sqrt{\frac{4\pi}{3}} \mu_w \rho_w(z) p_1(z)$$
+$$
+\rho_q(z) = e \sum_i z_i \rho_i(z), \qquad P_z(z) = \sqrt{\frac{4\pi}{3}} \mu_w \rho_w(z) p_1(z)
+$$
 
 ### Excluded Volume via White-Bear II FMT ($\mathcal{F}_{\text{WBII}}$)
 Species-resolved volume exclusion is handled by **White-Bear II Fundamental Measure Theory (FMT)**. The excess hard-sphere free energy density $\Phi_{\text{WBII}}(\mathbf{r})$ is decomposed into scalar and vector weighted densities:
 
-$$\Phi_{\text{WBII}} = -n_0 \ln(1 - n_3) + \frac{n_1 n_2 - \mathbf{n}_{v1} \cdot \mathbf{n}_{v2}}{1 - n_3} + \left( \frac{n_2^3 - 3 n_2 \mathbf{n}_{v2} \cdot \mathbf{n}_{v2}}{24\pi (1 - n_3)^2} \right) \xi(n_3)$$
+$$
+\Phi_{\text{WBII}} = -n_0 \ln(1 - n_3) + \frac{n_1 n_2 - \mathbf{n}_{v1} \cdot \mathbf{n}_{v2}}{1 - n_3} + \left( \frac{n_2^3 - 3 n_2 \mathbf{n}_{v2} \cdot \mathbf{n}_{v2}}{24\pi (1 - n_3)^2} \right) \xi(n_3)
+$$
 
 where the weights $n_\alpha(\mathbf{r}) = \sum_i \int \rho_i(\mathbf{r}') \omega_i^{(\alpha)}(\mathbf{r} - \mathbf{r}') d\mathbf{r}'$ account for particle volumes, surface areas, and curvature overlaps.
 
 ### Short-Range Correlation Residues ($\mathcal{F}_{\text{MSA}}^{\text{res}}$)
 To account for short-range electrostatic correlations without double-counting the long-range mean-field component, we derive residual correlation kernels from the **Mean Spherical Approximation (MSA)**:
 
-$$\mathcal{F}_{\text{MSA}}^{\text{res}} = -\frac{1}{2} \int d\mathbf{r} \int d\mathbf{r}' \sum_{\alpha,\beta} \Delta c_{\alpha\beta}^{\text{MSA}}(\mathbf{r} - \mathbf{r}') \rho_\alpha(\mathbf{r})\rho_\beta(\mathbf{r}')$$
+$$
+\mathcal{F}_{\text{MSA}}^{\text{res}} = -\frac{1}{2} \int d\mathbf{r} \int d\mathbf{r}' \sum_{\alpha,\beta} \Delta c_{\alpha\beta}^{\text{MSA}}(\mathbf{r} - \mathbf{r}') \rho_\alpha(\mathbf{r})\rho_\beta(\mathbf{r}')
+$$
 
 spanning ion-ion ($ii$), ion-dipole ($id$), and dipole-dipole ($dd$) correlation channels.
 
@@ -62,16 +72,22 @@ spanning ion-ion ($ii$), ion-dipole ($id$), and dipole-dipole ($dd$) correlation
 
 To capture the complex associative and cohesive behavior of liquid water, we couple the civilized electrolyte model with a **PC-SAFT (Perturbed Chain Statistical Associating Fluid Theory)** molecular free-energy extension:
 
-$$\mathcal{F}_{\text{water}} = \mathcal{F}_{\text{id}} + \mathcal{F}_{\text{WBII}} + \mathcal{F}_{\text{chain}} + \mathcal{F}_{\text{assoc}} + \mathcal{F}_{\text{disp}} + \int \rho_w(\mathbf{r}) V_{\text{wall}}(\mathbf{r}) d\mathbf{r}$$
+$$
+\mathcal{F}_{\text{water}} = \mathcal{F}_{\text{id}} + \mathcal{F}_{\text{WBII}} + \mathcal{F}_{\text{chain}} + \mathcal{F}_{\text{assoc}} + \mathcal{F}_{\text{disp}} + \int \rho_w(\mathbf{r}) V_{\text{wall}}(\mathbf{r}) d\mathbf{r}
+$$
 
 ### Wertheim Four-Site Association ($\mathcal{F}_{\text{assoc}}$)
 Hydrogen bonding is modeled using **Wertheim First-Order Thermodynamic Perturbation Theory (TPT1)** with a four-site associative scheme:
 
-$$\Phi_{\text{assoc}}(\mathbf{r}) = 4 \rho_w(\mathbf{r}) \left( \ln X_A(\mathbf{r}) - \frac{X_A(\mathbf{r})}{2} + \frac{1}{2} \right)$$
+$$
+\Phi_{\text{assoc}}(\mathbf{r}) = 4 \rho_w(\mathbf{r}) \left( \ln X_A(\mathbf{r}) - \frac{X_A(\mathbf{r})}{2} + \frac{1}{2} \right)
+$$
 
 The fraction of unbonded association sites $X_A(\mathbf{r})$ obeys the exact law of mass action:
 
-$$\Delta(\mathbf{r}) X_A^2(\mathbf{r}) + X_A(\mathbf{r}) - 1 = 0$$
+$$
+\Delta(\mathbf{r}) X_A^2(\mathbf{r}) + X_A(\mathbf{r}) - 1 = 0
+$$
 
 where $\Delta(\mathbf{r})$ depends on the local contact value of the hard-sphere radial distribution function $g_{\text{hs}}(\sigma; \{n_\alpha\})$.
 
@@ -84,7 +100,9 @@ Attractive dispersive forces are integrated using non-local dispersion kernels o
 
 Equilibrium corresponds to the stationary fixed point of the bulk-subtracted Euler-Lagrange map:
 
-$$\rho_i^{\text{new}}(z) = \rho_i^{\text{bulk}} \exp\left[ -\beta V_i^{\text{ext}}(z) - \beta \frac{\delta \mathcal{F}_{\text{ex}}}{\delta \rho_i(z)} + \beta \mu_i^{\text{ex}} \right]$$
+$$
+\rho_i^{\text{new}}(z) = \rho_i^{\text{bulk}} \exp\left[ -\beta V_i^{\text{ext}}(z) - \beta \frac{\delta \mathcal{F}_{\text{ex}}}{\delta \rho_i(z)} + \beta \mu_i^{\text{ex}} \right]
+$$
 
 Solving this highly non-linear, non-local integro-differential system across stiff potential boundaries required engineering a multi-stage numerical pipeline:
 
@@ -96,7 +114,11 @@ Solving this highly non-linear, non-local integro-differential system across sti
 2. **Potential & Resolution Continuation**: Solutions at lower wall potentials $\Phi_0$ serve as initial seed vectors for higher potential regimes, followed by hierarchical grid refinement.
 3. **Hybrid Solvers**: Robust safeguarded Anderson acceleration warm-up followed by Newton-Raphson iterations with an Armijo line search to ensure quadratic convergence.
 4. **Three-Pillar Acceptance Rule**: Every state is audited against strict physical criteria:
-   $$\text{Numerical Convergence} \;\wedge\; \text{Physical Admissibility} \;\wedge\; \text{Closure Consistency}$$
+
+   $$
+   \text{Numerical Convergence} \;\wedge\; \text{Physical Admissibility} \;\wedge\; \text{Closure Consistency}
+   $$
+
    Ensuring non-negative densities, White-Bear II packing bound satisfaction ($n_3(z) < 1$), bulk density recovery, and MSA residue consistency.
 
 ---
@@ -104,8 +126,6 @@ Solving this highly non-linear, non-local integro-differential system across sti
 ## 5. Supercomputing & Institutional Affiliation
 
 - **Research Group**: Biomembrane Remodeling Group, Mathematical Institute, Faculty of Mathematics and Physics (MFF), Charles University (Prague).
-- **Principal Investigator**: Dr. Christoph Allolio.
-- **Collaborations**: Center for Advanced Systems Understanding (CASUS), Helmholtz-Zentrum Dresden-Rossendorf (HZDR) / Prof. Thomas D. Kühne.
 - **HPC Infrastructure**: Simulations executed on the **Sněhurka** and **Chiméra** high-performance computing clusters at MFF, Univerzita Karlova.
 
 > [!tip] Download Full Poster

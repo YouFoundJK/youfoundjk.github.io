@@ -1,4 +1,6 @@
 ---
+import katex from 'katex';
+
 interface Heading {
   depth: number;
   slug: string;
@@ -12,6 +14,87 @@ interface Props {
 
 const { headings, isMobile = false } = Astro.props;
 const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+
+function extractBalancedLatex(str: string): string {
+  let depth = 0;
+  let started = false;
+  let endIdx = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === '{') {
+      depth++;
+      started = true;
+    } else if (str[i] === '}') {
+      depth--;
+      if (depth === 0 && started) {
+        endIdx = i + 1;
+        let j = endIdx;
+        while (j < str.length && (str[j] === '^' || str[j] === '_')) {
+          j++;
+          if (str[j] === '{') {
+            let subDepth = 1;
+            j++;
+            while (j < str.length && subDepth > 0) {
+              if (str[j] === '{') subDepth++;
+              else if (str[j] === '}') subDepth--;
+              j++;
+            }
+            endIdx = j;
+          } else {
+            j++;
+            endIdx = j;
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  return endIdx > 0 ? str.slice(0, endIdx) : str;
+}
+
+function renderHeadingWithLatex(raw: string): string {
+  if (!raw || (!raw.includes('\\') && !raw.includes('$'))) {
+    return raw;
+  }
+
+  // Unescape Astro's ${ which was transformed from {
+  const unescaped = raw.replace(/\$\{/g, '{');
+
+  // Check for pattern: prefix ( [garbled] \something... [garbled] ) suffix
+  const parenMatch = unescaped.match(/^([^(]*)\((.*)\)([^)]*)$/);
+  if (parenMatch) {
+    const prefix = parenMatch[1].trim();
+    const inside = parenMatch[2].trim();
+    const suffix = parenMatch[3].trim();
+
+    const slashIdx = inside.indexOf('\\');
+    if (slashIdx !== -1) {
+      const latex = extractBalancedLatex(inside.slice(slashIdx));
+      try {
+        const mathHtml = katex.renderToString(latex, {
+          throwOnError: false,
+          displayMode: false,
+        });
+        return `${prefix} (${mathHtml})${suffix}`;
+      } catch (e) {
+        // Fallback
+      }
+    }
+  }
+
+  // Handle regular inline $math$ if present
+  return unescaped.replace(/\$([^$]+)\$/g, (_, math) => {
+    try {
+      return katex.renderToString(math, {
+        throwOnError: false,
+        displayMode: false,
+      });
+    } catch {
+      return math;
+    }
+  });
+}
 ---
 
 {filteredHeadings.length > 0 && (
@@ -40,7 +123,7 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
             data-slug={h.slug}
           >
             {h.depth === 3 && <span class="text-slate-600 mr-1">↳</span>}
-            {h.text}
+            <span set:html={renderHeadingWithLatex(h.text)} />
           </a>
         </li>
       ))}

@@ -49,6 +49,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- KaTeX official CDN stylesheet & webfonts (ensures crisp glyphs and zero font metric mismatches) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+
     <!-- User Analytics (Umami Events) -->
     <script is:inline src="/scripts/analytics-events.js" defer></script>
   </head>
