@@ -41,6 +41,9 @@ jobs:
         env:
           ASTRO_BASE: ${{ steps.pages.outputs.base_path }}
 
+      - name: Ensure Google verifications in build output
+        run: cp -f public/verifications/*.html ./dist/ 2>/dev/null || true
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
