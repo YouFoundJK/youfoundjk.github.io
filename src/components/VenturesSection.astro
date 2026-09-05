@@ -1,0 +1,156 @@
+---
+interface Venture {
+  title: string;
+  role: string;
+  type: string;
+  typeColor: string;
+  description: string;
+  url: string;
+  secondaryUrl?: string;
+  secondaryLabel?: string;
+  highlights: string[];
+  tags: string[];
+}
+
+const ventures: Venture[] = [
+  {
+    title: "Full Calendar (Remastered)",
+    role: "Main Developer & Maintainer",
+    type: "FOSS / Open Source",
+    typeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
+    description: "A professional, extensible calendar engine for the Obsidian knowledge management platform. Seamlessly integrates local markdown event notes with remote CalDAV and ICS feeds, built with an offline-first data integrity architecture.",
+    url: "https://obsidian-full-calendar-remastered.github.io/plugin-full-calendar/",
+    secondaryUrl: "https://github.com/obsidian-full-calendar-remastered/plugin-full-calendar",
+    secondaryLabel: "GitHub Repo",
+    highlights: [
+      "Multi-provider calendar engine (CalDAV, Google / Apple ICS, local markdown)",
+      "Interactive agenda, day, week, month, and timeline scheduling views",
+      "Two-way synchronization with YAML frontmatter data validation"
+    ],
+    tags: ["TypeScript", "Obsidian API", "FullCalendar v6", "CalDAV", "ICS Engine"]
+  },
+  {
+    title: "De'Style'er",
+    role: "Founder & Creative Director",
+    type: "Creative Enterprise",
+    typeColor: "bg-cyber-gold/10 text-cyber-gold border-cyber-gold/25",
+    description: "An independent creative studio and design enterprise crafting bespoke visual identities, logo marks, vector illustrations, and digital design experiences for modern brands and academic initiatives.",
+    url: "https://www.destyleer.in.net/",
+    highlights: [
+      "Bespoke brand identity design, logo engineering, and typography systems",
+      "Digital vector artistry, technical diagrams, and editorial illustrations",
+      "End-to-end design consulting and bespoke online web experiences"
+    ],
+    tags: ["Brand Identity", "Logo Engineering", "Vector Art", "UI/UX", "Creative Direction"]
+  }
+];
+---
+
+<section id="ventures" class="py-24 px-4 sm:px-6 lg:px-8 relative border-t border-white/[0.04]">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="mb-14">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ember-500/10 border border-ember-500/25 text-ember-400 font-mono text-xs uppercase tracking-widest mb-3">
+        <span class="w-2 h-2 rounded-full bg-ember-500 animate-pulse"></span>
+        <span>Ventures &amp; Initiatives /&gt;</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+        Open Source &amp; Creative Enterprises
+      </h2>
+      <p class="mt-2 text-base text-slate-400 font-sans max-w-2xl">
+        Major software systems maintained in the open-source ecosystem, alongside independent design and creative ventures.
+      </p>
+    </div>
+
+    <!-- Ventures Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {ventures.map(v => (
+        <div 
+          class="vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/80 border border-white/[0.08] hover:border-ember-500/40 p-8 flex flex-col justify-between transition-all duration-300 shadow-xl group"
+          data-tilt
+        >
+          <!-- Top Badges & Role -->
+          <div>
+            <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
+              <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border ${v.typeColor}`}>
+                {v.type}
+              </span>
+              <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ember-400"></span>
+                {v.role}
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
+              <a href={v.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
+                <span>{v.title}</span>
+                <svg class="w-5 h-5 text-slate-400 group-hover:text-ember-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            </h3>
+
+            <!-- Description -->
+            <p class="mt-4 text-sm text-slate-300 leading-relaxed font-sans">
+              {v.description}
+            </p>
+
+            <!-- Highlights Checklist -->
+            <ul class="mt-6 space-y-2.5">
+              {v.highlights.map(h => (
+                <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
+                  <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>{h}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Footer: Tags & Action Buttons -->
+          <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
+            <!-- Tech / Category Tags -->
+            <div class="flex flex-wrap gap-2">
+              {v.tags.map(t => (
+                <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
+                  #{t}
+                </span>
+              ))}
+            </div>
+
+            <!-- Links -->
+            <div class="flex items-center gap-3 flex-wrap">
+              <a 
+                href={v.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-ember-500 hover:bg-ember-600 text-white font-mono text-xs font-semibold shadow-glow-ember hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                <span>Live Project /&gt;</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+
+              {v.secondaryUrl && (
+                <a 
+                  href={v.secondaryUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] hover:border-ember-500/40 font-mono text-xs font-semibold transition-all"
+                >
+                  <svg class="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                  </svg>
+                  <span>{v.secondaryLabel || "Repository"}</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

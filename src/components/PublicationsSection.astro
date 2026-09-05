@@ -18,10 +18,10 @@ const remainingPubs = sortedPubs.slice(3);
         <span>Publications /&gt;</span>
       </div>
       <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-        Peer-Reviewed Papers & Theses
+        Peer-Reviewed Papers & Preprints
       </h2>
       <p class="mt-2 text-base text-slate-400 font-sans max-w-xl">
-        Published research articles in physics, biophysics, and nanotechnology from Charles University, KIT, and UM-DAE CEBS.
+        Published research articles and preprints in biophysics, plasma physics, and theoretical nanoscience.
       </p>
     </div>
 
@@ -153,11 +153,13 @@ const remainingPubs = sortedPubs.slice(3);
         ))}
       </div>
 
-      <!-- Gradient Fade Overlay -->
-      <div 
-        id="pubs-fade-overlay" 
-        class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 to-transparent pointer-events-none transition-opacity duration-300"
-      ></div>
+      <!-- Gradient Fade Overlay (Only when more items exist) -->
+      {remainingPubs.length > 0 && (
+        <div 
+          id="pubs-fade-overlay" 
+          class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 to-transparent pointer-events-none transition-opacity duration-300"
+        ></div>
+      )}
     </div>
 
     <!-- Standard More Button -->
