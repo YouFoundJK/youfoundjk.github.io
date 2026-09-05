@@ -4,7 +4,7 @@ subtitle: "A Hierarchical Classical Density-Functional Theory for Ions and Coars
 abstract: "A thermodynamically consistent classical density-functional theory (cDFT) bridging a species-resolved civilized electrolyte model with a PC-SAFT coarse-grained molecular description of water. Developed at the Mathematical Institute, Charles University, this research models the simultaneous redistribution of ions, orientation of molecular solvent dipoles, and liquid packing restructuring at charged interfaces."
 order: 1
 category: ["Computational Biophysics", "Liquid State Theory", "Classical DFT", "Soft Matter"]
-date: "2024"
+date: "2026"
 featured: true
 thumbnail: "/images/projects/casus_poster.webp"
 links:

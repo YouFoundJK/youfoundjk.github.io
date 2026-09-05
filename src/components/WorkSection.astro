@@ -54,44 +54,49 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
       </div>
     </div>
 
-    <!-- 3D Parallax Tilt Cards Area (Folded to top 3 by default) -->
-    <div class="relative">
-      <!-- Initial 3 Projects Grid -->
+    <!-- 3D Parallax Tilt Cards Area -->
+    <div>
+      <!-- Initial 3 Projects Grid (100% visible, unobstructed) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="initial-projects-grid">
         {initialProjects.map(project => (
           <TiltCard project={project} />
         ))}
       </div>
 
-      <!-- Expandable Container for Remaining Projects -->
+      <!-- Expandable Wrapper for Remaining Projects (Shows second row barely, then shades it) -->
       {remainingProjects.length > 0 && (
         <div 
-          id="more-projects-container" 
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 transition-all duration-500 overflow-hidden"
-          style="max-height: 0; opacity: 0;"
+          id="more-projects-wrapper" 
+          class="relative mt-8 group/peek cursor-pointer"
+          title="Click to expand research & projects"
         >
-          {remainingProjects.map(project => (
-            <TiltCard project={project} />
-          ))}
-        </div>
-      )}
+          <!-- Remaining Projects Grid (Collapsed peek height: 175px) -->
+          <div 
+            id="more-projects-container" 
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-[max-height] duration-700 ease-in-out overflow-hidden pointer-events-none select-none"
+            style="max-height: 175px;"
+          >
+            {remainingProjects.map(project => (
+              <TiltCard project={project} />
+            ))}
+          </div>
 
-      <!-- Gradient Fade Overlay (Active only when collapsed) -->
-      {remainingProjects.length > 0 && (
-        <div 
-          id="projects-fade-overlay" 
-          class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 to-transparent pointer-events-none transition-opacity duration-300"
-        ></div>
+          <!-- Gradient Fade Overlay (Positioned exclusively over the peeked second row) -->
+          <div 
+            id="projects-fade-overlay" 
+            class="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/80 via-60% to-transparent pointer-events-none transition-opacity duration-500"
+          ></div>
+        </div>
       )}
     </div>
 
     <!-- Standard More Button -->
     {remainingProjects.length > 0 && (
-      <div class="mt-10 flex justify-center relative z-10" id="toggle-projects-wrapper">
+      <div class="mt-6 flex justify-center relative z-10" id="toggle-projects-wrapper">
         <button 
           id="toggle-projects-btn"
           type="button"
-          class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group"
+          class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.1] font-mono text-xs font-semibold hover:border-ember-500/40 hover:text-white transition-all shadow-lg group active:scale-[0.98]"
         >
           <span id="toggle-projects-text">+ Show More Research & Projects ({remainingProjects.length} more)</span>
           <svg id="toggle-projects-icon" class="w-4 h-4 text-ember-400 group-hover:translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,42 +122,85 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
     
     const toggleBtn = document.getElementById('toggle-projects-btn');
     const moreContainer = document.getElementById('more-projects-container');
+    const moreWrapper = document.getElementById('more-projects-wrapper');
     const fadeOverlay = document.getElementById('projects-fade-overlay');
     const toggleText = document.getElementById('toggle-projects-text');
     const toggleIcon = document.getElementById('toggle-projects-icon');
     const toggleWrapper = document.getElementById('toggle-projects-wrapper');
 
+    const PEEK_HEIGHT = '175px';
     let isExpanded = false;
     let currentFilter = 'All';
 
-    // 1. Show More / Less Toggle
-    if (toggleBtn && moreContainer) {
-      toggleBtn.addEventListener('click', () => {
-        isExpanded = !isExpanded;
+    // 1. Show More / Less Toggle Function
+    function toggleExpanded(expand?: boolean) {
+      if (!moreContainer) return;
+      isExpanded = expand !== undefined ? expand : !isExpanded;
 
-        if (isExpanded) {
-          moreContainer.style.maxHeight = '4000px';
-          moreContainer.style.opacity = '1';
-          if (fadeOverlay) fadeOverlay.style.opacity = '0';
-          if (toggleText) toggleText.textContent = 'Show Less /&gt;';
-          if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+      if (isExpanded) {
+        moreContainer.style.overflow = 'hidden';
+        moreContainer.style.maxHeight = '4000px';
+        moreContainer.classList.remove('pointer-events-none', 'select-none');
+        moreContainer.classList.add('pointer-events-auto');
 
-          // Reinitialize VanillaTilt for newly expanded cards
-          if (typeof (window as any).initTilts === 'function') {
-            setTimeout(() => (window as any).initTilts(), 50);
+        if (moreWrapper) {
+          moreWrapper.classList.remove('cursor-pointer');
+          moreWrapper.removeAttribute('title');
+        }
+        if (fadeOverlay) fadeOverlay.style.opacity = '0';
+        if (toggleText) toggleText.textContent = 'Show Less /&gt;';
+        if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-6');
+          toggleWrapper.classList.add('mt-10');
+        }
+
+        // Once transition completes, permit overflow for unrestricted 3D parallax depth
+        setTimeout(() => {
+          if (isExpanded && moreContainer) {
+            moreContainer.style.overflow = 'visible';
           }
-        } else {
-          moreContainer.style.maxHeight = '0px';
-          moreContainer.style.opacity = '0';
-          if (fadeOverlay) fadeOverlay.style.opacity = '1';
-          if (toggleText) toggleText.textContent = `+ Show More Research & Projects (${moreContainer.children.length} more)`;
-          if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+        }, 700);
 
-          // Scroll comfortably back to the top of the work section if user scrolled down
-          const workSection = document.getElementById('work');
-          if (workSection) {
-            workSection.scrollIntoView({ behavior: 'smooth' });
-          }
+        // Reinitialize VanillaTilt for newly expanded cards
+        if (typeof (window as any).initTilts === 'function') {
+          setTimeout(() => (window as any).initTilts(), 50);
+        }
+      } else {
+        moreContainer.style.overflow = 'hidden';
+        moreContainer.style.maxHeight = PEEK_HEIGHT;
+        moreContainer.classList.add('pointer-events-none', 'select-none');
+        moreContainer.classList.remove('pointer-events-auto');
+
+        if (moreWrapper) {
+          moreWrapper.classList.add('cursor-pointer');
+          moreWrapper.setAttribute('title', 'Click to expand research & projects');
+        }
+        if (fadeOverlay) fadeOverlay.style.opacity = '1';
+        if (toggleText) toggleText.textContent = `+ Show More Research & Projects (${moreContainer.children.length} more)`;
+        if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+        if (toggleWrapper) {
+          toggleWrapper.classList.remove('mt-10');
+          toggleWrapper.classList.add('mt-6');
+        }
+
+        // Scroll comfortably back to the top of the work section if user scrolled down
+        const workSection = document.getElementById('work');
+        if (workSection) {
+          workSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => toggleExpanded());
+    }
+
+    // Clicking the peek area while collapsed also expands the projects
+    if (moreWrapper) {
+      moreWrapper.addEventListener('click', () => {
+        if (!isExpanded) {
+          toggleExpanded(true);
         }
       });
     }
@@ -182,8 +230,15 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
             fadeOverlay.style.opacity = isExpanded ? '0' : '1';
           }
           if (moreContainer) {
-            moreContainer.style.maxHeight = isExpanded ? '4000px' : '0px';
-            moreContainer.style.opacity = isExpanded ? '1' : '0';
+            moreContainer.style.overflow = isExpanded ? 'visible' : 'hidden';
+            moreContainer.style.maxHeight = isExpanded ? '4000px' : PEEK_HEIGHT;
+            if (isExpanded) {
+              moreContainer.classList.remove('pointer-events-none', 'select-none');
+              moreContainer.classList.add('pointer-events-auto');
+            } else {
+              moreContainer.classList.add('pointer-events-none', 'select-none');
+              moreContainer.classList.remove('pointer-events-auto');
+            }
           }
 
           cards.forEach(card => {
@@ -195,8 +250,10 @@ const categories = ['All', ...Array.from(new Set(rawCategories))];
           if (toggleWrapper) toggleWrapper.style.display = 'none';
           if (fadeOverlay) fadeOverlay.style.display = 'none';
           if (moreContainer) {
-            moreContainer.style.maxHeight = '4000px';
-            moreContainer.style.opacity = '1';
+            moreContainer.style.overflow = 'visible';
+            moreContainer.style.maxHeight = 'none';
+            moreContainer.classList.remove('pointer-events-none', 'select-none');
+            moreContainer.classList.add('pointer-events-auto');
           }
 
           cards.forEach(card => {
