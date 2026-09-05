@@ -34,7 +34,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Build site with Astro
         run: npm run build
