@@ -5,86 +5,59 @@ interface Props {
 
 const navItems = [
   { label: 'Start />', href: '/#start' },
-  { label: 'Work />', href: '/#work' },
   { label: 'Publications />', href: '/#publications' },
-  { label: 'Notes />', href: '/notes/' },
-  { label: 'Experience />', href: '/#experience' },
-  { label: 'Certifications />', href: '/#certifications' },
-  { label: 'Gallery />', href: '/#gallery' },
   { label: 'Contact />', href: '/#contact' },
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-obsidian-950/80 border-b border-white/[0.06] transition-all duration-300">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-obsidian-950/70 border-b border-white/[0.04] transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
     <!-- Brand Logo -->
-    <a href="#start" class="group flex items-center gap-2 text-xl font-mono tracking-tight font-bold text-white transition-colors">
+    <a href="/#start" class="group flex items-center gap-1.5 text-base sm:text-lg font-mono tracking-tight font-bold text-white transition-colors">
       <span class="text-ember-500 font-extrabold">&lt;</span>
       <span class="group-hover:text-ember-400 transition-colors">YouFound<span class="text-ember-500">JK</span></span>
       <span class="text-ember-500 font-extrabold">/&gt;</span>
     </a>
 
-    <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+    <!-- Minimal Desktop Navigation (Just Start, Publications, Contact) -->
+    <nav class="hidden md:flex items-center gap-6 lg:gap-8">
       {navItems.map(item => (
         <a 
           href={item.href}
-          class="px-3 py-2 text-sm font-mono text-slate-300 hover:text-ember-400 hover:bg-white/[0.04] rounded-md transition-all duration-200"
+          class="text-xs sm:text-sm font-mono tracking-wide text-slate-400 hover:text-ember-400 transition-colors duration-200"
         >
           {item.label}
         </a>
       ))}
-      <a 
-        href="/uploads/resume.pdf" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="ml-3 inline-flex items-center gap-2 px-4 py-2 text-sm font-mono font-medium rounded-lg text-ember-400 bg-ember-500/10 border border-ember-500/30 hover:bg-ember-500 hover:text-white hover:shadow-glow-ember transition-all duration-200"
-      >
-        <span>CV /&gt;</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-        </svg>
-      </a>
     </nav>
 
     <!-- Mobile Menu Toggle Button -->
     <button 
       id="mobile-menu-btn"
       type="button"
-      class="md:hidden p-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+      class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
       aria-label="Toggle Navigation Menu"
     >
-      <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
       </svg>
-      <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
   </div>
 
-  <!-- Mobile Drawer Menu -->
-  <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-6 bg-obsidian-900/95 border-b border-white/[0.08] backdrop-blur-2xl">
-    <div class="flex flex-col gap-2">
+  <!-- Minimal Mobile Drawer -->
+  <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-5 bg-obsidian-950/95 border-b border-white/[0.06] backdrop-blur-2xl">
+    <div class="flex flex-col gap-1">
       {navItems.map(item => (
         <a 
           href={item.href}
-          class="mobile-link px-4 py-3 text-base font-mono text-slate-200 hover:text-ember-400 hover:bg-white/[0.04] rounded-lg transition-colors"
+          class="mobile-link px-3 py-2 text-sm font-mono text-slate-300 hover:text-ember-400 hover:bg-white/[0.04] rounded-md transition-colors"
         >
           {item.label}
         </a>
       ))}
-      <a 
-        href="/uploads/resume.pdf" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="mt-2 flex items-center justify-center gap-2 px-4 py-3 text-base font-mono font-medium rounded-lg text-ember-400 bg-ember-500/10 border border-ember-500/30 hover:bg-ember-500 hover:text-white transition-colors"
-      >
-        <span>Download CV /&gt;</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-        </svg>
-      </a>
     </div>
   </div>
 </header>
