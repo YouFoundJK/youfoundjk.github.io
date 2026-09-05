@@ -6,7 +6,7 @@ order: 1
 category: ["Computational Biophysics", "Liquid State Theory", "Classical DFT", "Soft Matter"]
 date: "2024"
 featured: true
-thumbnail: "/images/projects/casus_cdft.webp"
+thumbnail: "/images/projects/casus_poster.webp"
 links:
   pdf: "/uploads/CASUS_poster.pdf"
   external: "https://www.karlin.mff.cuni.cz/~allolio/"
