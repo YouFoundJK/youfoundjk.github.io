@@ -8,7 +8,7 @@ const sortedVentures = allVentures.sort((a, b) => a.data.order - b.data.order);
 const rawCategories = sortedVentures.flatMap(v => v.data.category);
 const categories = ['All', ...Array.from(new Set(rawCategories))];
 
-const INITIAL_THRESHOLD = 4;
+const INITIAL_THRESHOLD = 2;
 const initialVentures = sortedVentures.slice(0, INITIAL_THRESHOLD);
 const remainingVentures = sortedVentures.slice(INITIAL_THRESHOLD);
 ---
