@@ -64,10 +64,46 @@
   border-color: rgba(255, 87, 34, 0.3);
 }
 
-/* 3D Tilt container setup */
+/* 3D Parallax Tilt container setup */
 .vanilla-3d-tilt {
   transform-style: preserve-3d;
   will-change: transform;
+}
+
+.vanilla-3d-tilt > div,
+.vanilla-3d-tilt-content {
+  transform-style: preserve-3d;
+}
+
+/* Multi-layer 3D Parallax Depth:
+   At rest (when parallax is inactive): ALL layers are strictly at 0px.
+   When active/hovered: layers elevate into distinct z-planes,
+   so that even a slight mouse uncentering builds up rich, tangible 3D parallax.
+*/
+.tilt-z-subtle,
+.tilt-z-mid,
+.tilt-z-high,
+.tilt-z-top {
+  transform: translateZ(0px);
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
+}
+
+.vanilla-3d-tilt:hover .tilt-z-subtle {
+  transform: translateZ(16px);
+}
+
+.vanilla-3d-tilt:hover .tilt-z-mid {
+  transform: translateZ(28px);
+}
+
+.vanilla-3d-tilt:hover .tilt-z-high {
+  transform: translateZ(40px);
+}
+
+.vanilla-3d-tilt:hover .tilt-z-top {
+  transform: translateZ(52px);
 }
 
 /* Dynamic Glare Reflection */

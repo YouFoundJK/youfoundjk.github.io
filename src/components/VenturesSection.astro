@@ -31,7 +31,7 @@ const ventures: Venture[] = [
   },
   {
     title: "De'Style'er",
-    role: "Founder & Creative Director",
+    role: "Lead Strategist",
     type: "Creative Enterprise",
     typeColor: "bg-cyber-gold/10 text-cyber-gold border-cyber-gold/25",
     description: "An independent creative studio and design enterprise crafting bespoke visual identities, logo marks, vector illustrations, and digital design experiences for modern brands and academic initiatives.",
@@ -69,9 +69,9 @@ const ventures: Venture[] = [
           class="vanilla-3d-tilt relative rounded-2xl bg-obsidian-900/85 border border-white/[0.08] hover:border-ember-500/40 p-7 sm:p-8 flex flex-col justify-between transition-colors duration-300 hover:shadow-glow-card shadow-xl group"
         >
           <!-- Top Content Area -->
-          <div>
+          <div class="space-y-4">
             <!-- Top Badges & Role -->
-            <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
+            <div class="tilt-z-high flex items-center justify-between gap-4 flex-wrap mb-4">
               <span class={`px-3 py-1 rounded-full text-xs font-mono font-semibold border shadow-sm ${v.typeColor}`}>
                 {v.type}
               </span>
@@ -81,8 +81,8 @@ const ventures: Venture[] = [
               </span>
             </div>
 
-            <!-- Title -->
-            <div>
+            <!-- Title (Highest parallax elevation) -->
+            <div class="tilt-z-top">
               <h3 class="text-2xl font-bold font-display text-white group-hover:text-ember-400 transition-colors">
                 <a href={v.url} target="_blank" rel="noopener noreferrer" class="hover:underline flex items-center gap-2">
                   <span>{v.title}</span>
@@ -94,12 +94,12 @@ const ventures: Venture[] = [
             </div>
 
             <!-- Description -->
-            <p class="mt-4 text-sm text-slate-300 leading-relaxed font-sans">
+            <p class="tilt-z-mid mt-4 text-sm text-slate-300 leading-relaxed font-sans">
               {v.description}
             </p>
 
             <!-- Highlights Checklist -->
-            <ul class="mt-6 space-y-2.5">
+            <ul class="tilt-z-high mt-6 space-y-2.5">
               {v.highlights.map(h => (
                 <li class="flex items-start gap-2.5 text-xs font-sans text-slate-300">
                   <svg class="w-4 h-4 text-ember-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,10 +111,10 @@ const ventures: Venture[] = [
             </ul>
           </div>
 
-          <!-- Footer: Tags & Action Buttons (Cleanly positioned inside box) -->
+          <!-- Footer: Tags & Action Buttons (Cleanly positioned inside box with mid-layer depth) -->
           <div class="mt-8 pt-6 border-t border-white/[0.06] space-y-5">
             <!-- Tech / Category Tags -->
-            <div class="flex flex-wrap gap-2">
+            <div class="tilt-z-subtle flex flex-wrap gap-2">
               {v.tags.map(t => (
                 <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-white/[0.03] text-slate-400 border border-white/[0.06]">
                   #{t}
@@ -122,8 +122,8 @@ const ventures: Venture[] = [
               ))}
             </div>
 
-            <!-- Links: Refined, elegant buttons with standard sizing -->
-            <div class="flex items-center gap-3 flex-wrap">
+            <!-- Links: Refined, elegant buttons with standard sizing and 3D depth -->
+            <div class="tilt-z-mid flex items-center gap-3 flex-wrap">
               <a 
                 href={v.url} 
                 target="_blank" 
